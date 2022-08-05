@@ -3,8 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/ASUS/Documents/Ecole/Session 7/Projet/appConnect/app/src/main/res/drawable/colibri_launcher_background.xml" value="0.177" />
-        <entry key="..\:/Users/ASUS/Documents/Ecole/Session 7/Projet/appConnect/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/ASUS/Documents/Ecole/Session 7/Projet/appConnect/app/src/main/res/layout/activity_home.xml" value="0.264" />
+        <entry key="..\:/Users/ASUS/Documents/Ecole/Session 7/Projet/appConnect/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/ASUS/Documents/Ecole/Session 7/Projet/appConnect/app/src/main/res/menu/navigation.xml" value="0.11302083333333333" />
       </map>
     </option>
   </component>
