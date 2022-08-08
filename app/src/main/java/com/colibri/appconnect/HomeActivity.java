@@ -10,7 +10,7 @@ import com.google.firebase.firestore.CollectionReference;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private static final String TAG = "HOmeActivity";
+    private static final String TAG = "HomeActivity";
     ActivityHomeBinding binding;
     CollectionReference testRef;
 
@@ -23,7 +23,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
         //section FIRESTORE
-//        FirebaseFirestore.getInstance().collection("users").limit(1)
+//        FirebaseFirestore.getInstance().collection("users").orderBy("attrib").limit(1)
 //                .addSnapshotListener((value, e) -> {
 //                    if (e != null) {
 //                        Log.w(TAG, "listen:error", e);
