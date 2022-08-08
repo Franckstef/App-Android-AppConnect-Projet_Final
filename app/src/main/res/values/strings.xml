@@ -4,4 +4,6 @@
     <string name="accueil">Accueil</string>
     <string name="contact">Contact</string>
     <string name="profil">Profil</string>
+    <string name="forum">Forum</string>
+    <string name="menu">Menu</string>
 </resources>
