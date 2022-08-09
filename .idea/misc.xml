@@ -3,9 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/ASUS/Documents/Ecole/Session 7/Projet/appConnect/app/src/main/res/drawable/border.xml" value="0.121" />
+        <entry key="..\:/Users/ASUS/Documents/Ecole/Session 7/Projet/appConnect/app/src/main/res/font/custom_font.xml" value="0.22407407407407406" />
+        <entry key="..\:/Users/ASUS/Documents/Ecole/Session 7/Projet/appConnect/app/src/main/res/layout/activity_details_news.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/ASUS/Documents/Ecole/Session 7/Projet/appConnect/app/src/main/res/layout/activity_home.xml" value="0.264" />
         <entry key="..\:/Users/ASUS/Documents/Ecole/Session 7/Projet/appConnect/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/ASUS/Documents/Ecole/Session 7/Projet/appConnect/app/src/main/res/layout/bottom_nav_menu.xml" value="0.1685185185185185" />
+        <entry key="..\:/Users/ASUS/Documents/Ecole/Session 7/Projet/appConnect/app/src/main/res/layout/fragment_home.xml" value="0.2" />
         <entry key="..\:/Users/ASUS/Documents/Ecole/Session 7/Projet/appConnect/app/src/main/res/layout/list_actualite.xml" value="0.264" />
         <entry key="..\:/Users/ASUS/Documents/Ecole/Session 7/Projet/appConnect/app/src/main/res/layout/list_newsfeed.xml" value="0.264" />
         <entry key="..\:/Users/ASUS/Documents/Ecole/Session 7/Projet/appConnect/app/src/main/res/layout/viewPager.xml" value="0.1685185185185185" />

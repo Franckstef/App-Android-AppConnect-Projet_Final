@@ -29,14 +29,14 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView titre;
         public ImageView image;
-        public TextView description;
+        public TextView date;
         public androidx.cardview.widget.CardView layout;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.titre = itemView.findViewById(R.id.textTitre);
             this.image = itemView.findViewById(R.id.imageView);
-            this.description = itemView.findViewById(R.id.textDescription);
+            this.date = itemView.findViewById(R.id.textDescription);
             this.layout = itemView.findViewById(R.id.layout);
 
             itemView.setOnClickListener(view -> { });
@@ -59,12 +59,12 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         int imageResource = holder.itemView.getResources().getIdentifier(uri, null, holder.itemView.getContext().getPackageName());
         holder.titre.setText(myListData.getTitre());
         holder.image.setImageResource(imageResource);
-        holder.description.setText(myListData.getDescription());
+        holder.date.setText(myListData.getDate());
 
-        /*holder.layout.setOnClickListener(v -> {
+        holder.layout.setOnClickListener(v -> {
             onClick.onItemClick(myListData);
             //Toast.makeText(v.getContext(),"click on item: " + myListData.getTitre(),Toast.LENGTH_LONG).show();
-        });*/
+        });
 
     }
 
@@ -73,8 +73,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         return listNews.size();
     }
 
-    /*public void setOnClick(OnItemClicked onClick){
+    public void setOnClick(OnItemClicked onClick){
         this.onClick=onClick;
-    }*/
+    }
 
 }

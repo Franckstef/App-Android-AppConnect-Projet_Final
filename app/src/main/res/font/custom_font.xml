@@ -4,6 +4,6 @@
     <font
         android:fontStyle="normal"
         android:fontWeight="500"
-        android:font="@font/sriracha"
+        android:font="@font/montserratsemibold"
         />
 </font-family>
