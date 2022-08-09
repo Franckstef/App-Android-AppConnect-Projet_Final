@@ -7,21 +7,21 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.colibri.appconnect.databinding.UserItemBinding;
+import com.colibri.appconnect.databinding.MessageItemBinding;
 
 import java.util.ArrayList;
 
-public class ChatAdaptor extends RecyclerView.Adapter<CustomAdaptor.CategoryViewHolder> {
+public class ChatAdaptor extends RecyclerView.Adapter<ChatAdaptor.CategoryViewHolder> {
 
 
-    private ArrayList<User> userList;
+    private ArrayList<Message> messageList;
     private OnItemClickListener listener;
 
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
-        UserItemBinding binding;
+         MessageItemBinding binding;
 
-        public CategoryViewHolder(@NonNull UserItemBinding binding) {
+        public CategoryViewHolder(@NonNull MessageItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -30,42 +30,49 @@ public class ChatAdaptor extends RecyclerView.Adapter<CustomAdaptor.CategoryView
             itemView.setOnClickListener(v -> listener.onItemClick(position));
         }
 
-        public void setCategory(User user) {
-            binding.setUser(user);
+        public void setMessage(Message message) {
+            binding.setMessage(message);
         }
     }
 
-    public CustomAdaptor(ArrayList<User> clientsList, OnItemClickListener listener) {
-        this.userList = clientsList;
+    public ChatAdaptor(ArrayList<Message> messagrList, OnItemClickListener listener) {
+        this.messageList = messagrList;
         this.listener = listener;
     }
 
     @NonNull
     @Override
-    public CustomAdaptor.CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ChatAdaptor.CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
 
-        UserItemBinding binding = UserItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new CustomAdaptor.CategoryViewHolder(binding);
+        MessageItemBinding binding = MessageItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new ChatAdaptor.CategoryViewHolder(binding);
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull CustomAdaptor.CategoryViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.setCategory(userList.get(position));
+    public void onBindViewHolder(@NonNull ChatAdaptor.CategoryViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        holder.setMessage(messageList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return userList.size();
+        return messageList.size();
     }
 
-    public User getUser(int position){
-        return userList.get(position);
+
+    public void addMessage(Message msg){
+        messageList.add(0, msg);
+        notifyItemInserted(0);
     }
 
-    public void updateUser(User user, int position){
-        userList.set(position, user);
-        notifyItemChanged(position);
-    }
+
+//    public User getUser(int position){
+//        return userList.get(position);
+//    }
+//
+//    public void updateUser(User user, int position){
+//        userList.set(position, user);
+//        notifyItemChanged(position);
+//    }
 }

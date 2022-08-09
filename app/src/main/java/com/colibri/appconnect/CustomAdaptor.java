@@ -51,6 +51,7 @@ public class CustomAdaptor extends RecyclerView.Adapter<CustomAdaptor.CategoryVi
 
     @Override
     public void onBindViewHolder(@NonNull CustomAdaptor.CategoryViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        holder.bind(position, listener);
         holder.setCategory(userList.get(position));
     }
 
