@@ -16,8 +16,8 @@ public class MainActivity extends AppCompatActivity {
         Button connexion = findViewById(R.id.buttonConnexion);
 
         connexion.setOnClickListener(v -> {
-            Intent i = new Intent(getApplicationContext(),HomeActivity.class);
-            startActivity(i);
+            Intent HomeIntent = new Intent(getApplicationContext(),HomeActivity.class);
+            startActivity(HomeIntent);
         });
     }
 }
