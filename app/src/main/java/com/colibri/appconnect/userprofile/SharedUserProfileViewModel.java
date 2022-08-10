@@ -1,8 +1,11 @@
 package com.colibri.appconnect.userprofile;
 
+
 import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,11 +26,23 @@ public class SharedUserProfileViewModel extends ViewModel {
         userProfile.postValue(new Resource.Success<>(UserProfile.MockUserProfile()));
     }
 
-    public LiveData<Resource<UserProfile>> getUserProfile(){
-        return userProfile;
+    public LiveData<Boolean> isLoading(){
+        return Transformations.map(userProfile, resUserProfile->{
+            return (resUserProfile instanceof Resource.Loading);
+        });
     }
 
-    public static class Factory extends ViewModelProvider.NewInstanceFactory{
+    public LiveData<UserProfile> getUserProfile(){
+        return Transformations.map(userProfile, resUserProfile->{
+                    if (resUserProfile instanceof Resource.Success){
+                        return resUserProfile.getData();
+                    }
+                    return null;
+                }
+                );
+    }
+
+    public static class Factory implements ViewModelProvider.Factory{
         private final String mPlaceholderRepo;
         private final String mUserId;
 
