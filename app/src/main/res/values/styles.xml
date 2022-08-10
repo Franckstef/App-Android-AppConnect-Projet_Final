@@ -6,9 +6,21 @@
         <item name="android:fontFamily">@font/custom_font</item>
     </style>
 
-    <style name="description" parent="TextAppearance.AppCompat">
-        <item name="android:textStyle"> bold</item>
+    <style name="titreArticle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize"> 20dp</item>
+        <item name="android:fontFamily">@font/custom_font</item>
+    </style>
+
+    <style name="textIntro" parent="TextAppearance.AppCompat">
+        <item name="android:textStyle"> bold </item>
+        <item name="android:textSize"> 15dp</item>
+        <item name="android:fontFamily">@font/custom_font</item>
+    </style>
+
+    <style name="textArticle" parent="TextAppearance.AppCompat">
+        <item name="android:textStyle"> normal </item>
         <item name="android:textSize"> 14dp</item>
+        <item name="android:fontFamily">@font/custom_font2</item>
     </style>
 
 </resources>

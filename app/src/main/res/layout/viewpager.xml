@@ -10,6 +10,6 @@
         android:layout_height="match_parent"
         android:contentDescription="TODO"
         android:adjustViewBounds="true"
-        android:scaleType="fitXY"/>
+        android:scaleType="centerCrop"/>
 
 </LinearLayout>
