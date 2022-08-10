@@ -60,6 +60,12 @@ public class CustomAdaptor extends RecyclerView.Adapter<CustomAdaptor.CategoryVi
         return userList.size();
     }
 
+    public void addConversation(User user){
+        userList.add(0, user);
+        notifyItemChanged(0);
+    }
+
+
     public User getUser(int position){
         return userList.get(position);
     }
