@@ -22,7 +22,7 @@ public class Resource<T> {
     }
 
 
-    static class Success<T> extends Resource<T>{
+    public static class Success<T> extends Resource<T>{
         public Success(){
             super();
         }
@@ -32,7 +32,7 @@ public class Resource<T> {
         }
     }
 
-    static class Error<T> extends Resource<T>{
+    public static class Error<T> extends Resource<T>{
         public Error(String message){
             super(null, message);
         }
@@ -42,7 +42,7 @@ public class Resource<T> {
         }
     }
 
-    static class Loading<T> extends Resource<T>{
+    public static class Loading<T> extends Resource<T>{
         public Loading(){
             super(null);
         }
