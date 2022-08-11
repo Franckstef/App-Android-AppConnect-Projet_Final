@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="userProfile"
+            type="com.colibri.appconnect.userprofile.UserProfile" />
+        <variable
+            name="action1"
+            type="com.colibri.appconnect.userprofile.ActionButtonBinding" />
+        <variable
+            name="action2"
+            type="com.colibri.appconnect.userprofile.ActionButtonBinding" />
+        <variable
+            name="action3"
+            type="com.colibri.appconnect.userprofile.ActionButtonBinding" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@color/design_default_color_surface"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/design_default_color_primary"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingHorizontal="32dp"
+            android:paddingVertical="16dp"
+            >
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:layout_margin="32dp"
+                android:padding="5dp"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                app:srcCompat="@android:drawable/sym_def_app_icon"
+                app:strokeColor="@color/white"
+                app:strokeWidth="5dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="@{userProfile.displayName}"
+                tools:text="Mon nom"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+                android:textColor="@color/design_default_color_on_primary" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="@{userProfile.title}"
+                tools:text="Mon titre"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                android:textColor="@color/design_default_color_on_primary" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="@{userProfile.location}"
+                tools:text="Mon lieux de travail"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                android:textColor="@color/design_default_color_on_primary" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:layout_marginVertical="16dp">
+
+
+            <include layout="@layout/tmp_action_button"
+                bind:action="@{action1}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                />
+            <include layout="@layout/tmp_action_button"
+                bind:action="@{action2}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                />
+            <include layout="@layout/tmp_action_button"
+                bind:action="@{action3}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                />
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>
