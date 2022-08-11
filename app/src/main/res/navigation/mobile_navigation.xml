@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/navigation_chat"
-        android:name="com.colibri.appconnect.ChatFragment"
+        android:name="com.colibri.appconnect.ConversationsFragment"
         android:label="Chat"
-        tools:layout="@layout/fragment_chat" />
+        tools:layout="@layout/fragment_conversations" />
 
     <fragment
         android:id="@+id/navigation_contact"
