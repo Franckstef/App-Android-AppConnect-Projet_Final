@@ -23,10 +23,10 @@ public class SharedUserProfileViewModel extends ViewModel {
         super();
         this.userId = userId;
         this.placeholderRepo = placeholderRepo;
-        userProfile.postValue(new Resource.Success<>(UserProfile.MockUserProfile()));
+//        userProfile.postValue(new Resource.Success<>(UserProfile.MockUserProfile()));
     }
 
-    public LiveData<Boolean> isLoading(){
+    public LiveData<Boolean> getIsLoading(){
         return Transformations.map(userProfile, resUserProfile->{
             return (resUserProfile instanceof Resource.Loading);
         });
