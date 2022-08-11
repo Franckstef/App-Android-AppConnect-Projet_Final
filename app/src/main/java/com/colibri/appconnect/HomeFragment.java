@@ -19,7 +19,7 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
     public HomeFragment() {}
 
     ViewPager viewPager;
-    int[] images = {R.drawable.tunnel,  R.drawable.structure_verre, R.drawable.collegues, R.drawable.casques, R.drawable.employe, R.drawable.stop, R.drawable.ouvriers, R.drawable.poutres};
+    int[] images = {R.drawable.img_1, R.drawable.img_2, R.drawable.img_3, R.drawable.img_4, R.drawable.img_5, R.drawable.img_6, R.drawable.img_7, R.drawable.img_8, R.drawable.img_9, R.drawable.img_10, R.drawable.img_11, R.drawable.img_12};
     private final ArrayList<Integer> ImagesArray = new ArrayList<>();
     private static int currentPage = 0;
     private static int NUM_PAGES = 0;
@@ -45,7 +45,7 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
         viewPager.setAdapter(viewPagerAdapter);
 
         ArrayList<News> list= new ArrayList();
-        list.add(new News("acceptabilite_sociale",
+        list.add(new News("news_acceptabilite",
                 "L'importance de mettre en place une démarche d’acceptabilité sociale dans vos projets",
                 "En 1967, une importante infrastructure québécoise est inaugurée : le pont-tunnel Louis-Hippolyte-La Fontaine. Réputée pour sa fiabilité sur le plan de la mécanique et pour sa durabilité, cette infrastructure est néanmoins représentative d’une époque révolue en ce qui concerne la conception d’un projet. Les travaux, aujourd’hui en rupture avec les pratiques courantes en matière d’acceptabilité sociale, auraient certainement rencontré plus d’un obstacle.\n",
                 "Cet ouvrage en béton précontraint est effectivement construit à une époque où environnement et collectivités s’adaptaient aux projets, et non l’inverse. Érigé sur les berges du fleuve Saint-Laurent, le pont-tunnel a alors engendré des impacts environnementaux majeurs. Répercussions sous-estimées, voire ignorées, à une époque où peu de considération était portée à l’environnement\n" +
@@ -64,7 +64,7 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
                         "\n" +
                         "L’après-projet peut en effet être riche de renseignements nouveaux émanant de toutes les parties prenantes. Parmi les autres pratiques de suivi de projet, un comité peut être mis sur pied afin d’assurer un suivi auprès de la communauté après l’inauguration du chantier.",
                 "08/08/22"));
-        list.add(new News("camion",
+        list.add(new News("news_transport",
                 "S'approvisionner en produits locaux par l’intermédiaire d’un circuit court",
                 "Face aux problèmes d’approvisionnement provoqués par la COVID-19, Matériaux Direct, un détaillant en matériaux de construction, a concentré ses efforts sur l’approvisionnement de produits locaux par l’intermédiaire d’un circuit court. Mais comment cette initiative peut-elle servir d’exemple dans le milieu de la construction ?\n",
                 "Depuis six ans, son propriétaire, Maxime Bossinotte, répond aux besoins de l’industrie en ce qui a trait à l’ossature du bâtiment et à l’aménagement extérieur. Mais depuis mars 2020, la COVID-19 agit comme une chape de plomb et sème quelques embuches sur son sillage. À mesure que les matériaux de construction se font de plus en plus rares, les délais se prolongent.\n" +
@@ -81,7 +81,7 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
                         "\n" +
                         "Face à cette méthode avantageuse, il ne dissimule pas son optimisme. Si la pandémie a marqué le domaine de la construction au fer rouge, il a su viser juste. Il bénéficie aujourd’hui d’une reconnaissance qui l’incite à conserver la même trajectoire – cent pour cent locale.",
                 "08/08/22"));
-        list.add(new News("pont",
+        list.add(new News("news_pont",
                 "Aluminium : un choix judicieux dans le domaine des ponts et des passerelles",
                 "Plus de 70 ans après la construction du premier pont routier en aluminium au Québec, ce métal peine toujours à s’imposer au sein de ces grandes structures. Or, la situation serait sur le point de changer.\n",
                 "« D’ici cinq ans, nous devrions être capables de faire des ponts en aluminium comme on fait des ponts en acier-béton », prédit le responsable du chantier Infrastructures et ouvrages d’art chez AluQuébec, Mario Fafard. Ces dernières années, cet ingénieur civil s’est donné comme mission de convaincre les donneurs d’ouvrage de favoriser ce matériau, dont les avantages sont majeurs : léger, esthétiquement beau, durable et résistant à la corrosion atmosphérique.\n" +
@@ -115,7 +115,7 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
                         "\n" +
                         "Celui-ci rêve, un jour, de dire la même chose pour les ponts. Entretemps, AluQuébec veillera à ce qu’il y ait plus d’enseignement sur ce métal dans les formations de génie civil et continuera à faire valoir les mérites de ce matériau.",
                 "05/08/22"));
-        list.add(new News("lego",
+        list.add(new News("news_lego",
                 "LEGO déconstruit le concept d’espace de travail",
                 "Après cinq ans de planification et de construction, le groupe LEGO a inauguré, au printemps 2022, le campus de son siège social de Billund, au Danemark.\n",
                 "Facilement reconnaissable aux deux grosses briques jaunes qui ornent son toit, le campus LEGO conçu par la firme d’architecture C.F. Møller, est composé de huit bâtiments reliés entre eux totalisant une superficie de 54 000 mètres carrés. Si l’extérieur offre plusieurs clins d’œil aux fameuses briques (reproductions géantes intercalées aux fenêtres, revêtement et puits de lumière ronds…), le design intérieur est tout aussi caractéristique de la marque.\n" +
@@ -134,7 +134,7 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
                         "\n" +
                         "Le développement durable est au cœur de la conception du nouveau Campus. En plus de ses nombreux espaces verts qui contribuent au bien-être des employés tout en améliorant la biodiversité, le projet inclut un système de collecte des eaux de pluie (redistribuées dans des bassins et des lacs), des panneaux solaires (installés sur le toit d’un stationnement voisin) et l’emploi de matériaux durables. Des initiatives qui ont valu au projet une certification LEED or.",
                 "05/08/22"));
-        list.add(new News("hotel",
+        list.add(new News("news_hotel",
                 "Un complexe hôtelier conçu à partir de plastique recyclé",
                 "La firme d’architecture britannique Margot Krasojević Architecture a présenté une proposition audacieuse pour résoudre les problèmes de pollution de l’océan Indien, soit la construction d’un complexe flottant de luxe au large des côtes australiennes, fabriqué à partir de déchets.\n",
                 "Facilement reconnaissable aux deux grosses briques jaunes qui ornent son toit, le campus LEGO conçu par la firme d’architecture C.F. Møller, est composé de huit bâtiments reliés entre eux totalisant une superficie de 54 000 mètres carrés. Si l’extérieur offre plusieurs clins d’œil aux fameuses briques (reproductions géantes intercalées aux fenêtres, revêtement et puits de lumière ronds…), le design intérieur est tout aussi caractéristique de la marque.\n" +

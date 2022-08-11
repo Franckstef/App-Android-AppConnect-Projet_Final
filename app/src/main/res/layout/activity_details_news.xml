@@ -59,7 +59,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textTitre"
-                app:srcCompat="@drawable/hotel" />
+                app:srcCompat="@drawable/news_hotel" />
 
             <TextView
                 android:id="@+id/textIntro"
