@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
@@ -28,31 +29,40 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
 
-        Button connexion = findViewById(R.id.buttonConnexion);
+        Button connexion = binding.buttonConnexion ;
 
         connexion.setOnClickListener(v -> {
-
-            mAuth.signInWithEmailAndPassword(binding.editTextPseudo.getText().toString(), binding.editTextPassword.getText().toString())
-                    .addOnCompleteListener(this, task -> {
-
-                        if (task.isSuccessful()) {
-                            Intent HomeIntent = new Intent(getApplicationContext(),HomeActivity.class);
-                            startActivity(HomeIntent);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("TAG", "signInWithEmail:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-            if (v != null) {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            }
+            OnConnexionClick(v);
         });
     }
 
+
+    private void OnConnexionClick(View v){
+        String email =   binding.editTextPseudo.getText().toString();
+        String password = binding.editTextPassword.getText().toString();
+        if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, R.string.Auth_InfoMissing, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+
+                    if (task.isSuccessful()) {
+                        StartHomeActivity();
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        Toast.makeText(MainActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    }
 
     @Override
     public void onStart() {
@@ -62,10 +72,19 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser != null){
             Toast.makeText(this, "authenticated already", Toast.LENGTH_SHORT).show();
 
-            Intent HomeIntent = new Intent(getApplicationContext(),HomeActivity.class);
-            startActivity(HomeIntent);
+            StartHomeActivity();
+
+        }
+
+    }
+
+    private void StartHomeActivity(){
+        Intent HomeIntent = new Intent(getApplicationContext(),HomeActivity.class);
+        startActivity(HomeIntent);
+    }
 
         }
     }
 
+    private static final String TAG = "MainActivity";
 }
