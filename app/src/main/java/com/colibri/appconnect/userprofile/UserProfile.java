@@ -39,12 +39,12 @@ public class UserProfile implements Parcelable {
     public static UserProfile MockUserProfile(){
         return new UserProfile(
                 "-1",
-                "Philippe Allard-Rousse",
-                "philrousse@gmail.com",
+                "George Laraque",
+                "george@laraque.com",
                 "(514) 555-5555",
                 "",
                 "Contre-Maitre",
-                "Chantier du Chum"
+                "Chantier du CHUM"
         );
     }
 
