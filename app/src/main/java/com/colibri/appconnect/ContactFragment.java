@@ -1,57 +1,40 @@
 package com.colibri.appconnect;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ContactFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.colibri.appconnect.databinding.FragmentContactBinding;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.Objects;
+
+
 public class ContactFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "ContactFragment";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    FragmentContactBinding binding;
 
     public ContactFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ContactFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ContactFragment newInstance(String param1, String param2) {
-        ContactFragment fragment = new ContactFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -59,6 +42,35 @@ public class ContactFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contact, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact, container, false);
+        OnItemClickListener listener = position -> {
+            Intent intent = new Intent(container.getContext(), ChatActivity.class);
+            User user = ((CustomAdaptor) Objects.requireNonNull(binding.rvConversation.getAdapter())).getUser(position);
+            intent.putExtra(ChatActivity.USERTO, user.userId);
+            startActivity(intent);
+        };
+
+        CollectionReference colRef = FirebaseFirestore.getInstance().collection("users");
+        colRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<User> users;
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Log.d(TAG, document.getId() + " => " + document.getData());
+
+                }
+                users = new ArrayList<>(task.getResult().toObjects(User.class));
+                CustomAdaptor categoryAdapter = new CustomAdaptor(users, listener);
+
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(container.getContext(), LinearLayoutManager.VERTICAL, false);
+
+                // in below two lines we are setting layoutmanager and adapter to our recycler view.
+                binding.rvConversation.setLayoutManager(linearLayoutManager);
+                binding.rvConversation.setAdapter(categoryAdapter);
+            } else {
+                Log.d(TAG, "Error getting documents: ", task.getException());
+            }
+        });
+
+        return binding.getRoot();
     }
 }
