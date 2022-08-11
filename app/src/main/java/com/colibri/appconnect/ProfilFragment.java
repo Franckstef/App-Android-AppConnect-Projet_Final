@@ -2,11 +2,17 @@ package com.colibri.appconnect;
 
 import android.os.Bundle;
 
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.colibri.appconnect.databinding.ProfileViewLayoutBinding;
+import com.colibri.appconnect.userprofile.ActionButtonBinding;
+import com.colibri.appconnect.userprofile.UserProfile;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +65,26 @@ public class ProfilFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profil, container, false);
+        ProfileViewLayoutBinding binding = DataBindingUtil.inflate(
+                inflater,
+                R.layout.profile_view_layout,
+                container,
+                false
+        );
+        UserProfile up = UserProfile.MockUserProfile();
+        ActionButtonBinding ChatAction = new ActionButtonBinding(
+                AppCompatResources.getDrawable(this.getContext(),R.drawable.ic_message),
+                getString(R.string.ProfileAction_Chat));
+        ActionButtonBinding PhoneAction = new ActionButtonBinding(
+                AppCompatResources.getDrawable(this.getContext(),R.drawable.ic_email),
+                up.getPrimaryEmail());
+        ActionButtonBinding MailAction = new ActionButtonBinding(
+                AppCompatResources.getDrawable(this.getContext(),R.drawable.ic_phone),
+                up.getPrimaryPhoneNumber());
+        binding.setUserProfile(up);
+        binding.setAction1(ChatAction);
+        binding.setAction2(PhoneAction);
+        binding.setAction3(MailAction);
+        return binding.getRoot();
     }
 }
