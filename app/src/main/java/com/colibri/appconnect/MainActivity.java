@@ -83,8 +83,5 @@ public class MainActivity extends AppCompatActivity {
         startActivity(HomeIntent);
     }
 
-        }
-    }
-
     private static final String TAG = "MainActivity";
 }
