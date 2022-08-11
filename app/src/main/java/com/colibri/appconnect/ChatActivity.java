@@ -101,6 +101,8 @@ public class ChatActivity extends AppCompatActivity {
 
             colRef.add(msg).addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId()))
                     .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+
+            binding.etChatMessage.setText("");
         });
     }
 
