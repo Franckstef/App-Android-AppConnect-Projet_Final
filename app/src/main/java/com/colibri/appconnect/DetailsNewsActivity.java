@@ -1,0 +1,48 @@
+package com.colibri.appconnect;
+
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import java.util.Objects;
+
+public class DetailsNewsActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_details_news);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        toolbar.setTitle("");
+
+        ImageView image = findViewById(R.id.imageView);
+        TextView titre = findViewById(R.id.textTitre);
+        TextView intro = findViewById(R.id.textIntro);
+        TextView article = findViewById(R.id.textArticle);
+        TextView date = findViewById(R.id.textDate);
+
+        Bundle bundle = getIntent().getExtras();
+        titre.setText(bundle.getString("titre"));
+        intro.setText(bundle.getString("intro"));
+        article.setText(bundle.getString("article"));
+        date.setText(bundle.getString("date"));
+
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+}

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "561816501572",
+    "project_id": "appconnect-41ff1",
+    "storage_bucket": "appconnect-41ff1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561816501572:android:ea9b49aa1fa35df7dceb11",
+        "android_client_info": {
+          "package_name": "com.colibri.appconnect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "561816501572-faivo8sfcjb9amcop8qlhv2qe4oabvi3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdi60VQvr1-8wENl52KmCScWAK4wOnzi8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "561816501572-faivo8sfcjb9amcop8qlhv2qe4oabvi3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
