@@ -1,23 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/accueil"
+        android:id="@+id/navigation_home"
         android:enabled="true"
         android:icon="@drawable/ic_home"
         android:title="@string/accueil"/>
     <item
-        android:id="@+id/message"
-        android:enabled="true"
-        android:icon="@drawable/ic_message"
-        android:title="@string/message"/>
-    <item
-        android:id="@+id/contact"
+        android:id="@+id/navigation_contact"
         android:enabled="true"
         android:icon="@drawable/ic_contact"
         android:title="@string/contact"/>
     <item
-        android:id="@+id/profil"
+        android:id="@+id/navigation_chat"
         android:enabled="true"
-        android:icon="@drawable/ic_profil"
-        android:title="@string/profil"/>
+        android:icon="@drawable/ic_message"
+        android:title="@string/message"/>
+    <item
+        android:id="@+id/navigation_forum"
+        android:enabled="true"
+        android:icon="@drawable/ic_forum"
+        android:title="@string/forum"/>
+    <item
+        android:id="@+id/navigation_menu"
+        android:enabled="true"
+        android:icon="@drawable/ic_menu"
+        android:title="@string/menu"/>
 
 </menu>

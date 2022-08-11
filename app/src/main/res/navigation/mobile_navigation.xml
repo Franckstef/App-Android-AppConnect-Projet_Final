@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.colibri.appconnect.HomeFragment"
+        android:label="AppConnect"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_chat"
+        android:name="com.colibri.appconnect.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat" />
+
+    <fragment
+        android:id="@+id/navigation_contact"
+        android:name="com.colibri.appconnect.ContactFragment"
+        android:label="Contact"
+        tools:layout="@layout/fragment_contact" />
+
+    <fragment
+        android:id="@+id/navigation_forum"
+        android:name="com.colibri.appconnect.ForumFragment"
+        android:label="Forum"
+        tools:layout="@layout/fragment_contact" />
+
+    <fragment
+        android:id="@+id/navigation_menu"
+        android:name="com.colibri.appconnect.MenuFragment"
+        android:label="Menu"
+        tools:layout="@layout/fragment_contact" />
+</navigation>
