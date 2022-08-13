@@ -1,17 +1,23 @@
-package com.colibri.appconnect.data.firestorelive;
+package com.colibri.appconnect.data.firestore.firestorelive;
+
 
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.colibri.appconnect.data.firestore.firestorelive.util.FirestoreLiveUtil;
 import com.colibri.appconnect.util.QueryStatus;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-class TaskDocumentLiveDataNative<T> extends LiveData<QueryStatus<T>> {
-    private final Task<DocumentSnapshot> task;
+import java.util.ArrayList;
+import java.util.List;
+
+class TaskCollectionLiveDataNative<T> extends LiveData<QueryStatus<List<T>>> {
+    private final Task<QuerySnapshot> task;
     private final Class<T> aClass;
-    TaskDocumentLiveDataNative(Task<DocumentSnapshot> task, Class<T> c){
+    TaskCollectionLiveDataNative(Task<QuerySnapshot> task, Class<T> c){
         this.task = task;
         aClass = c;
     }
@@ -22,8 +28,10 @@ class TaskDocumentLiveDataNative<T> extends LiveData<QueryStatus<T>> {
         setValue(new QueryStatus.Loading<>());
         task.addOnCompleteListener(taskComplete -> {
             if (taskComplete.isSuccessful()) {
-                DocumentSnapshot documentSnapshot = taskComplete.getResult();
-                setValue(new QueryStatus.Success<>(documentSnapshot.toObject(aClass)));
+                QuerySnapshot querySnapshot = taskComplete.getResult();
+                setValue(new QueryStatus.Success<>(
+                        FirestoreLiveUtil.QueryToPojo(querySnapshot,aClass)
+                ));
             } else {
                 Throwable taskCompleteException = taskComplete.getException();
                 Log.e("FireStoreLiveData", "", taskCompleteException);
@@ -33,10 +41,10 @@ class TaskDocumentLiveDataNative<T> extends LiveData<QueryStatus<T>> {
     }
 }
 
-class TaskDocumentLiveDataCustom<T> extends LiveData<QueryStatus<T>> {
-    private final Task<DocumentSnapshot> task;
+class TaskCollectionLiveDataCustom<T> extends LiveData<QueryStatus<List<T>>> {
+    private final Task<QuerySnapshot> task;
     private final IDocumentSnapshotParser<T> parser;
-    TaskDocumentLiveDataCustom(Task<DocumentSnapshot> task, IDocumentSnapshotParser<T> parser){
+    TaskCollectionLiveDataCustom(Task<QuerySnapshot> task, IDocumentSnapshotParser<T> parser){
         this.task = task;
         this.parser =parser;
     }
@@ -47,8 +55,14 @@ class TaskDocumentLiveDataCustom<T> extends LiveData<QueryStatus<T>> {
         setValue(new QueryStatus.Loading<>());
         task.addOnCompleteListener(taskComplete -> {
             if (taskComplete.isSuccessful()) {
-                DocumentSnapshot documentSnapshot = taskComplete.getResult();
-                setValue(new QueryStatus.Success<>(parser.parse(documentSnapshot)));
+                QuerySnapshot querySnapshot = taskComplete.getResult();
+                List<DocumentSnapshot> snapshotList = querySnapshot != null ? querySnapshot.getDocuments() : new ArrayList<>();
+                List<T> tList = new ArrayList<>();
+                for (DocumentSnapshot doc :
+                        snapshotList) {
+                    tList.add(parser.parse(doc));
+                }
+                setValue(new QueryStatus.Success<>(tList));
             } else {
                 Throwable taskCompleteException = taskComplete.getException();
                 Log.e("FireStoreLiveData", "", taskCompleteException);
@@ -58,10 +72,10 @@ class TaskDocumentLiveDataCustom<T> extends LiveData<QueryStatus<T>> {
     }
 }
 
-class TaskDocumentLiveDataRaw extends LiveData<QueryStatus<DocumentSnapshot>> {
-    private final Task<DocumentSnapshot> task;
+class TaskCollectionLiveDataRaw extends LiveData<QueryStatus<QuerySnapshot>> {
+    private final Task<QuerySnapshot> task;
 
-    TaskDocumentLiveDataRaw(Task<DocumentSnapshot> task){
+    TaskCollectionLiveDataRaw(Task<QuerySnapshot> task){
         this.task = task;
     }
 
@@ -80,3 +94,4 @@ class TaskDocumentLiveDataRaw extends LiveData<QueryStatus<DocumentSnapshot>> {
         });
     }
 }
+

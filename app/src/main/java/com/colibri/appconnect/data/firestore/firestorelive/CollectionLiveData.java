@@ -1,26 +1,28 @@
-package com.colibri.appconnect.data.firestorelive;
+package com.colibri.appconnect.data.firestore.firestorelive;
 
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.colibri.appconnect.data.firestore.document.FirestoreDocument;
+import com.colibri.appconnect.data.firestore.firestorelive.util.FirestoreLiveUtil;
 import com.colibri.appconnect.util.QueryStatus;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class QueryLiveDataNative<T> extends LiveData<QueryStatus<List<T>>> {
-    private final Query query;
+class CollectionLiveDataNative<T> extends LiveData<QueryStatus<List<T>>> {
+    private final CollectionReference collectionReference;
     private final Class<T> aClass;
 
     private ListenerRegistration listener = null;
 
-    QueryLiveDataNative(Query cr, Class<T> c){
-        query = cr;
+    CollectionLiveDataNative(CollectionReference cr, Class<T> c){
+        collectionReference = cr;
         aClass = c;
     }
 
@@ -28,11 +30,12 @@ class QueryLiveDataNative<T> extends LiveData<QueryStatus<List<T>>> {
     protected void onActive(){
         super.onActive();
         setValue(new QueryStatus.Loading<>());
-        listener = query.addSnapshotListener((querySnapshot, exception) -> {
+        listener = collectionReference.addSnapshotListener((querySnapshot, exception) -> {
             if (exception == null) {
                 if (querySnapshot != null) {
-                    setValue(new QueryStatus.Success<>(querySnapshot.toObjects(aClass)));
-                }
+                    setValue(new QueryStatus.Success<>(
+                            FirestoreLiveUtil.QueryToPojo(querySnapshot,aClass)
+                    ));                }
             } else {
                 Log.e("FireStoreLiveData", "", exception);
                 setValue(new QueryStatus.Error<>(exception));
@@ -51,14 +54,14 @@ class QueryLiveDataNative<T> extends LiveData<QueryStatus<List<T>>> {
     }
 }
 
-class QueryLiveDataCustom<T> extends LiveData<QueryStatus<List<T>>> {
-    private final Query query;
+class CollectionLiveDataCustom<T> extends LiveData<QueryStatus<List<T>>> {
+    private final CollectionReference collectionReference;
     private final IDocumentSnapshotParser<T> parser;
 
     private ListenerRegistration listener = null;
 
-    QueryLiveDataCustom(Query cr, IDocumentSnapshotParser<T> parser){
-        query = cr;
+    CollectionLiveDataCustom(CollectionReference cr, IDocumentSnapshotParser<T> parser){
+        collectionReference = cr;
         this.parser =parser;
     }
 
@@ -66,7 +69,7 @@ class QueryLiveDataCustom<T> extends LiveData<QueryStatus<List<T>>> {
     protected void onActive(){
         super.onActive();
         setValue(new QueryStatus.Loading<>());
-        listener = query.addSnapshotListener((querySnapshot, exception) -> {
+        listener = collectionReference.addSnapshotListener((querySnapshot, exception) -> {
             if (exception == null) {
                 List<DocumentSnapshot> snapshotList = querySnapshot != null ? querySnapshot.getDocuments() : new ArrayList<>();
                 List<T> tList = new ArrayList<>();
@@ -93,20 +96,20 @@ class QueryLiveDataCustom<T> extends LiveData<QueryStatus<List<T>>> {
     }
 }
 
-class QueryLiveDataRaw extends LiveData<QueryStatus<QuerySnapshot>> {
-    private final Query query;
+class CollectionLiveDataRaw extends LiveData<QueryStatus<QuerySnapshot>> {
+    private final CollectionReference collectionReference;
 
     private ListenerRegistration listener = null;
 
-    QueryLiveDataRaw(Query cr){
-        query = cr;
+    CollectionLiveDataRaw(CollectionReference cr){
+        collectionReference = cr;
     }
 
     @Override
     protected void onActive(){
         super.onActive();
         setValue(new QueryStatus.Loading<>());
-        listener = query.addSnapshotListener((querySnapshot, exception) -> {
+        listener = collectionReference.addSnapshotListener((querySnapshot, exception) -> {
             if (exception == null) {
                 setValue(new QueryStatus.Success<>(querySnapshot));
             } else {

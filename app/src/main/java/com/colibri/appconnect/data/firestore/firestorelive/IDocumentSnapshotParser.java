@@ -1,4 +1,4 @@
-package com.colibri.appconnect.data.firestorelive;
+package com.colibri.appconnect.data.firestore.firestorelive;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 

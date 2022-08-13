@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 
 import com.colibri.appconnect.R;
 import com.colibri.appconnect.databinding.FragmentProfilBinding;
-import com.colibri.appconnect.databinding.ProfileViewLayoutBinding;
 
 /**
  * A simple {@link Fragment} subclass.

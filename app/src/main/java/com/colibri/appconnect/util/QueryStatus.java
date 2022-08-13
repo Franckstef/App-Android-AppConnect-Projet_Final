@@ -1,20 +1,19 @@
 package com.colibri.appconnect.util;
 
-enum QueryStates {
-    Created,
-    Success,
-    Live,
-    Error,
-    Loading
-}
+import androidx.annotation.NonNull;
+
 public class QueryStatus<T> {
-    protected QueryStates state = QueryStates.Created;
+    protected QueryStates state;
     protected T data = null;
     protected String message = null;
     protected Throwable error = null;
 
     protected QueryStatus(QueryStates status){
         state = status;
+    }
+
+    public QueryStates getState() {
+        return state;
     }
 
     public String getMessage() {
@@ -40,6 +39,16 @@ public class QueryStatus<T> {
         return error;
     }
 
+    @Override
+    public String toString() {
+        return "QueryStatus{" +
+                "state=" + state +
+                ", data=" + data +
+                ", message='" + message + '\'' +
+                ", error=" + error +
+                '}';
+    }
+
     public static class Success<T> extends QueryStatus<T> {
         public Success(){
             super(QueryStates.Success);
@@ -48,6 +57,15 @@ public class QueryStatus<T> {
         public Success(T data){
             super(QueryStates.Success);
             this.data = data;
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "QueryStatus.Success{" +
+                    "state=" + state +
+                    ", data=" + data +
+                    '}';
         }
     }
 
@@ -67,11 +85,27 @@ public class QueryStatus<T> {
             this.message = message;
             this.data = data;
         }
+
+        @Override
+        public String toString() {
+            return "QueryStatus{" +
+                    "state=" + state +
+                    ", data=" + data +
+                    ", message='" + message + '\'' +
+                    ", error=" + error +
+                    '}';
+        }
     }
 
     public static class Loading<T> extends QueryStatus<T> {
         public Loading(){
             super(QueryStates.Loading);
+        }
+        @Override
+        public String toString() {
+            return "QueryStatus{" +
+                    "state=" + state +
+                    '}';
         }
     }
 }

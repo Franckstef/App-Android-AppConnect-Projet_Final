@@ -1,26 +1,25 @@
-package com.colibri.appconnect.data.firestorelive;
+package com.colibri.appconnect.data.firestore.firestorelive;
+
 
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.colibri.appconnect.data.firestore.document.FirestoreDocument;
+import com.colibri.appconnect.data.firestore.firestorelive.util.FirestoreLiveUtil;
 import com.colibri.appconnect.util.QueryStatus;
-import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-import java.util.List;
-
-class CollectionLiveDataNative<T> extends LiveData<QueryStatus<List<T>>> {
-    private final CollectionReference collectionReference;
+class DocumentLiveDataNative<T> extends LiveData<QueryStatus<T>> {
+    private final DocumentReference documentReference;
     private final Class<T> aClass;
 
     private ListenerRegistration listener = null;
 
-    CollectionLiveDataNative(CollectionReference cr, Class<T> c){
-        collectionReference = cr;
+    DocumentLiveDataNative(DocumentReference documentReference, Class<T> c){
+        this.documentReference = documentReference;
         aClass = c;
     }
 
@@ -28,10 +27,12 @@ class CollectionLiveDataNative<T> extends LiveData<QueryStatus<List<T>>> {
     protected void onActive(){
         super.onActive();
         setValue(new QueryStatus.Loading<>());
-        listener = collectionReference.addSnapshotListener((querySnapshot, exception) -> {
+        listener = documentReference.addSnapshotListener((documentSnapshot, exception) -> {
             if (exception == null) {
-                if (querySnapshot != null) {
-                    setValue(new QueryStatus.Success<>(querySnapshot.toObjects(aClass)));
+                if (documentSnapshot != null) {
+                    setValue(new QueryStatus.Success<>(
+                            FirestoreLiveUtil.DocumentToPojo(documentSnapshot, aClass)
+                    ));
                 }
             } else {
                 Log.e("FireStoreLiveData", "", exception);
@@ -51,14 +52,14 @@ class CollectionLiveDataNative<T> extends LiveData<QueryStatus<List<T>>> {
     }
 }
 
-class CollectionLiveDataCustom<T> extends LiveData<QueryStatus<List<T>>> {
-    private final CollectionReference collectionReference;
+class DocumentLiveDataCustom<T> extends LiveData<QueryStatus<T>> {
+    private final DocumentReference documentReference;
     private final IDocumentSnapshotParser<T> parser;
 
     private ListenerRegistration listener = null;
 
-    CollectionLiveDataCustom(CollectionReference cr, IDocumentSnapshotParser<T> parser){
-        collectionReference = cr;
+    DocumentLiveDataCustom(DocumentReference cr, IDocumentSnapshotParser<T> parser){
+        documentReference = cr;
         this.parser =parser;
     }
 
@@ -66,15 +67,9 @@ class CollectionLiveDataCustom<T> extends LiveData<QueryStatus<List<T>>> {
     protected void onActive(){
         super.onActive();
         setValue(new QueryStatus.Loading<>());
-        listener = collectionReference.addSnapshotListener((querySnapshot, exception) -> {
+        listener = documentReference.addSnapshotListener((documentSnapshot, exception) -> {
             if (exception == null) {
-                List<DocumentSnapshot> snapshotList = querySnapshot != null ? querySnapshot.getDocuments() : new ArrayList<>();
-                List<T> tList = new ArrayList<>();
-                for (DocumentSnapshot doc :
-                        snapshotList) {
-                    tList.add(parser.parse(doc));
-                }
-                setValue(new QueryStatus.Success<>(tList));
+                setValue(new QueryStatus.Success<>(parser.parse(documentSnapshot)));
             } else {
                 Log.e("FireStoreLiveData", "", exception);
                 setValue(new QueryStatus.Error<>(exception));
@@ -93,22 +88,22 @@ class CollectionLiveDataCustom<T> extends LiveData<QueryStatus<List<T>>> {
     }
 }
 
-class CollectionLiveDataRaw extends LiveData<QueryStatus<QuerySnapshot>> {
-    private final CollectionReference collectionReference;
+class DocumentLiveDataRaw extends LiveData<QueryStatus<DocumentSnapshot>> {
+    private final DocumentReference documentReference;
 
     private ListenerRegistration listener = null;
 
-    CollectionLiveDataRaw(CollectionReference cr){
-        collectionReference = cr;
+    DocumentLiveDataRaw(DocumentReference cr){
+        documentReference = cr;
     }
 
     @Override
     protected void onActive(){
         super.onActive();
         setValue(new QueryStatus.Loading<>());
-        listener = collectionReference.addSnapshotListener((querySnapshot, exception) -> {
+        listener = documentReference.addSnapshotListener((documentSnapshot, exception) -> {
             if (exception == null) {
-                setValue(new QueryStatus.Success<>(querySnapshot));
+                setValue(new QueryStatus.Success<>(documentSnapshot));
             } else {
                 Log.e("FireStoreLiveData", "", exception);
                 setValue(new QueryStatus.Error<>(exception));

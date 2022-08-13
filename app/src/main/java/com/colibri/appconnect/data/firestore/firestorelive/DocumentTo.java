@@ -1,4 +1,4 @@
-package com.colibri.appconnect.data.firestorelive;
+package com.colibri.appconnect.data.firestore.firestorelive;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;

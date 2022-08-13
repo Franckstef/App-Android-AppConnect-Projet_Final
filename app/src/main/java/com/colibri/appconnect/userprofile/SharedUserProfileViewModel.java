@@ -2,21 +2,20 @@ package com.colibri.appconnect.userprofile;
 
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.colibri.appconnect.util.Resource;
+import com.colibri.appconnect.util.QueryStatus;
 
 public class SharedUserProfileViewModel extends ViewModel {
 
 
     private final String userId;
     private final String placeholderRepo;
-    private final MutableLiveData<Resource<UserProfile>> userProfile = new MutableLiveData<>(new Resource.Loading<>());
+    private final MutableLiveData<QueryStatus<UserProfile>> userProfile = new MutableLiveData<>(new QueryStatus.Loading<>());
 
     public SharedUserProfileViewModel(String placeholderRepo, String userId)
     {
@@ -28,13 +27,13 @@ public class SharedUserProfileViewModel extends ViewModel {
 
     public LiveData<Boolean> getIsLoading(){
         return Transformations.map(userProfile, resUserProfile->{
-            return (resUserProfile instanceof Resource.Loading);
+            return (resUserProfile instanceof QueryStatus.Loading);
         });
     }
 
     public LiveData<UserProfile> getUserProfile(){
         return Transformations.map(userProfile, resUserProfile->{
-                    if (resUserProfile instanceof Resource.Success){
+                    if (resUserProfile instanceof QueryStatus.Success){
                         return resUserProfile.getData();
                     }
                     return null;
