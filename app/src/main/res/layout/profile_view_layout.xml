@@ -37,6 +37,7 @@
             >
 
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profile_image"
                 android:layout_width="125dp"
                 android:layout_height="125dp"
                 android:layout_margin="32dp"
@@ -89,6 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                android:id="@+id/action1"
                 />
             <include layout="@layout/tmp_action_button"
                 bind:action="@{action2}"

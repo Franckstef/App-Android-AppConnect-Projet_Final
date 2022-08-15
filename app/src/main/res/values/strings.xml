@@ -10,4 +10,7 @@
     <string name="search">Search</string>
     <string name="ProfileAction_Chat">Envoyer un message</string>
     <string name="Auth_InfoMissing">Entrez votre courriel et votre mots de passe</string>
+    <string name="AuthError_UserCancel">Authentification annuller par l\'utilisateur</string>
+    <string name="AuthError_NoNetwork">Erreur d\'authentification: Aucune connection internet disponible</string>
+    <string name="AuthError_Unknow">Erreur inconnu d\'authentification</string>
 </resources>

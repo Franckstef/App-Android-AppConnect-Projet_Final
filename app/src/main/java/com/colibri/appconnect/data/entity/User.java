@@ -29,6 +29,9 @@ public class User {
         return document.getDisplayName();
     }
 
+    public String getAvatar(){
+        return document.getAvatar();
+    }
     public void setAvatarToImageView(ImageView imageView){
         Picasso.get().load(R.drawable.user).into(imageView);
     }

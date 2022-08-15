@@ -13,6 +13,7 @@
     <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:onClick="@{action::onClick}"
     app:cardBackgroundColor="@{action.highlighted ?  @color/design_default_color_secondary : @color/design_default_color_surface}"
     app:cardCornerRadius="12dp"
     app:cardElevation="0dp"

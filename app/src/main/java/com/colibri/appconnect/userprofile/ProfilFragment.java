@@ -93,9 +93,16 @@ public class ProfilFragment extends Fragment {
         });
         UserProfile up = UserProfile.MockUserProfile();
         ActionButtonBinding ChatAction = new ActionButtonBinding(
-                AppCompatResources.getDrawable(this.getContext(),R.drawable.ic_message),
-                getString(R.string.ProfileAction_Chat));
+                AppCompatResources.getDrawable(this.getContext(),R.drawable.ic_identity),
+                "Sign Out");
 
+        viewModel.getUserProfile().observe(this,
+                userProfile -> {
+                    if (userProfile != null) {
+                        userProfile.setAvatarToImageView(binding.include.profileImage);
+                    }
+                }
+        );
         binding.setLifecycleOwner(this);
         binding.setUserProfile(viewModel);
         binding.setAction1(ChatAction);

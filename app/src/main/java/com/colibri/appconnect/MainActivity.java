@@ -40,16 +40,14 @@ public class MainActivity extends AppCompatActivity {
 
         Button connexion = binding.buttonConnexion ;
 
-        connexion.setOnClickListener(v -> {
-            OnConnexionClick(v);
-        });
+        connexion.setOnClickListener(this::OnConnexionClick);
     }
 
 
     private void OnConnexionClick(View v){
         String email =   binding.editTextPseudo.getText().toString();
         String password = binding.editTextPassword.getText().toString();
-        if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
+        if (email.isEmpty() || password.isEmpty()) {
             MissingInfoAttemp++;
             if(MissingInfoAttemp < 5) {
                 Toast.makeText(this, R.string.Auth_InfoMissing, Toast.LENGTH_LONG).show();
@@ -68,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        Toast.makeText(MainActivity.this, "Authentication failed.",
+                        Toast.makeText(MainActivity.this, "Authentication failed. Again",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -89,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
 
             StartHomeActivity();
 
+        } else {
+            SignWithAuthUi();
         }
 
     }
@@ -100,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void SignWithAuthUi(){
         List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build());
+                new AuthUI.IdpConfig.EmailBuilder().build(),
+                new AuthUI.IdpConfig.GoogleBuilder().build());
 
         // Create and launch sign-in intent
         Intent signInIntent = AuthUI.getInstance()
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onActivityResult(FirebaseAuthUIAuthenticationResult result) {
                     onSignInResult(result);
+
                 }
             }
     );

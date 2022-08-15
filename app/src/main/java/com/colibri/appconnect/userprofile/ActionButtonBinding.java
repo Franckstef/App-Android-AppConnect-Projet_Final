@@ -1,6 +1,9 @@
 package com.colibri.appconnect.userprofile;
 
 import android.graphics.drawable.Drawable;
+import android.view.View;
+
+import com.colibri.appconnect.data.repository;
 
 public class ActionButtonBinding {
     private Drawable icon;
@@ -22,5 +25,9 @@ public class ActionButtonBinding {
 
     public Boolean getHighlighted() {
         return isHighlighted;
+    }
+
+    public void onClick(View view){
+        repository.getInstance().SignOut();
     }
 }

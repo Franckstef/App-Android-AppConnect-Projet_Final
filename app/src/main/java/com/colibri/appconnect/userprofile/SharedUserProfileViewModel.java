@@ -1,6 +1,8 @@
 package com.colibri.appconnect.userprofile;
 
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -8,6 +10,9 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.colibri.appconnect.data.entity.User;
+import com.colibri.appconnect.data.repository;
+import com.colibri.appconnect.util.QueryStates;
 import com.colibri.appconnect.util.QueryStatus;
 
 public class SharedUserProfileViewModel extends ViewModel {
@@ -15,14 +20,17 @@ public class SharedUserProfileViewModel extends ViewModel {
 
     private final String userId;
     private final String placeholderRepo;
-    private final MutableLiveData<QueryStatus<UserProfile>> userProfile = new MutableLiveData<>(new QueryStatus.Loading<>());
+    private final repository repo = repository.getInstance();
+//    private final MutableLiveData<QueryStatus<UserProfile>> userProfile = new MutableLiveData<>(new QueryStatus.Loading<>());
+    private final LiveData<QueryStatus<User>> userProfile = repo.getCurrentUser();
+
 
     public SharedUserProfileViewModel(String placeholderRepo, String userId)
     {
         super();
         this.userId = userId;
         this.placeholderRepo = placeholderRepo;
-//        userProfile.postValue(new Resource.Success<>(UserProfile.MockUserProfile()));
+
     }
 
     public LiveData<Boolean> getIsLoading(){
@@ -33,8 +41,9 @@ public class SharedUserProfileViewModel extends ViewModel {
 
     public LiveData<UserProfile> getUserProfile(){
         return Transformations.map(userProfile, resUserProfile->{
-                    if (resUserProfile instanceof QueryStatus.Success){
-                        return resUserProfile.getData();
+                    if (resUserProfile.isSuccessful()){
+                        Log.d(TAG, "getUserProfile: " + resUserProfile);
+                        return new UserProfile(resUserProfile.getData());
                     }
                     return null;
                 }
@@ -56,5 +65,7 @@ public class SharedUserProfileViewModel extends ViewModel {
             return (T) new SharedUserProfileViewModel(mPlaceholderRepo, mUserId);
         }
     }
+
+    private static final String TAG = "ProfileViewModel";
 }
 
