@@ -2,7 +2,7 @@
 <!--XML implementation of Card Layout-->
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardViewMenu"
+    android:id="@+id/cardViewRessources"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -16,17 +16,18 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/imageMenu"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:id="@+id/imageRessources"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
             android:layout_gravity="center"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@mipmap/ic_launcher"
+            android:scaleType="centerCrop" />
 
         <TextView
             android:id="@+id/textTitre"
-            style="@style/textIntro"
+            style="@style/titre"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

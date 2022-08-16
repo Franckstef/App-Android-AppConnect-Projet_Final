@@ -47,7 +47,7 @@ public class MenuFragment extends Fragment {
                     startActivity(intent);
                     break;
                 case 1:
-                    Intent intent4 = new Intent(getContext(), HomeActivity.class);
+                    Intent intent4 = new Intent(getContext(), RessourcesActivity.class);
                     startActivity(intent4);
                     break;
                 default:
