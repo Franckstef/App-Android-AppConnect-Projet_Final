@@ -9,20 +9,9 @@
     <data>
         <import type="android.view.View"/>
         <variable
-            name="userProfile"
+            name="viewModel"
             type="com.colibri.appconnect.userprofile.SharedUserProfileViewModel" />
-        <variable
-            name="action1"
-            type="com.colibri.appconnect.userprofile.ActionButtonBinding" />
-        <variable
-            name="action2"
-            type="com.colibri.appconnect.userprofile.ActionButtonBinding" />
-        <variable
-            name="action3"
-            type="com.colibri.appconnect.userprofile.ActionButtonBinding" />
-        <variable
-            name="isLoading"
-            type="Boolean" />
+
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
 
@@ -33,18 +22,15 @@
         <include
             android:id="@+id/include"
             layout="@layout/profile_view_layout"
-            bind:userProfile="@{userProfile.userProfile}"
-            bind:action1="@{action1}"
-            bind:action2="@{action2}"
-            bind:action3="@{action3}"
-            android:visibility="@{userProfile.isLoading?View.GONE:View.VISIBLE}"
+            bind:viewModel="@{viewModel}"
+            android:visibility="@{!viewModel.isLoading}"
             />
 
         <ProgressBar
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{userProfile.isLoading?View.VISIBLE:View.GONE}"
+            android:visibility="@{viewModel.isLoading}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

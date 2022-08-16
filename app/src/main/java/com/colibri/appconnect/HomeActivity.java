@@ -18,6 +18,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.colibri.appconnect.contactList.ContactFragment;
 import com.colibri.appconnect.data.Authenticator;
 import com.colibri.appconnect.data.repository;
 import com.colibri.appconnect.databinding.ActivityHomeBinding;

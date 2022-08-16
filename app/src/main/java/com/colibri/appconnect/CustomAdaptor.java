@@ -7,13 +7,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.colibri.appconnect.data.entity.User;
 import com.colibri.appconnect.databinding.UserItemBinding;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class CustomAdaptor extends RecyclerView.Adapter<CustomAdaptor.CategoryViewHolder> {
 
-    private ArrayList<User> userList;
+    private List<User> userList;
     private OnItemClickListener listener;
 
 
@@ -34,7 +35,7 @@ public class CustomAdaptor extends RecyclerView.Adapter<CustomAdaptor.CategoryVi
         }
     }
 
-    public CustomAdaptor(ArrayList<User> clientsList, OnItemClickListener listener) {
+    public CustomAdaptor(List<User> clientsList, OnItemClickListener listener) {
         this.userList = clientsList;
         this.listener = listener;
     }

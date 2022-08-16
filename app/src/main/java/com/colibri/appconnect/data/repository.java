@@ -1,7 +1,6 @@
 package com.colibri.appconnect.data;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
@@ -12,6 +11,7 @@ import androidx.lifecycle.Transformations;
 
 import com.colibri.appconnect.data.entity.User;
 import com.colibri.appconnect.data.firestore.document.UserDoc;
+import com.colibri.appconnect.data.firestore.firestorelive.CollectionTo;
 import com.colibri.appconnect.data.firestore.firestorelive.DocumentTo;
 import com.colibri.appconnect.util.QueryStates;
 import com.colibri.appconnect.util.QueryStatus;
@@ -20,6 +20,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 interface IRepository{
     void getUserList();
@@ -70,7 +74,7 @@ public class repository {
                         switch (state){
                             case Success:
                                 liveResponse.postValue(new QueryStatus.Loading<>());
-                                liveCurrentUser = getUser(uid.getData());
+                                liveCurrentUser = getUser(uid.getData(), true);
                                 liveResponse.addSource(liveCurrentUser, liveResponse::setValue);
                             case Error:
                                 liveResponse.postValue((new QueryStatus.Error<>(uid.getMessage())));
@@ -120,10 +124,35 @@ public class repository {
     }
 
 
-
-    public LiveData<QueryStatus<User>> getUser(String userId){
+    public LiveData<QueryStatus<List<User>>> getListUser(){
+        LiveData<QueryStatus<List<UserDoc>>> liveQueryUserList = CollectionTo.liveData(getUsersCollection(), UserDoc.class);
+        return Transformations.map(liveQueryUserList, queryUserList->{
+           switch (queryUserList.getState()){
+               case Success:
+                   List<UserDoc> userDocList = queryUserList.getData();
+                   List<User> userList = new ArrayList<>();
+                   for (UserDoc userDoc:
+                        userDocList) {
+                       if(!Objects.equals(auth.getCurrentUserId(), userDoc.getDocId())) {
+                           userList.add(new User(userDoc, false));
+                       }
+                   }
+                   return new QueryStatus.Success<>(userList);
+               case Error:
+                   return new QueryStatus.Error<List<User>>(queryUserList.getMessage());
+               case Loading:
+                   return new QueryStatus.Loading<>();
+               default:
+                   return new QueryStatus.Error<List<User>>("Unknow Error");
+           }
+        });
+    }
+    public LiveData<QueryStatus<User>> getUser(String userId) {
+        return getUser(userId,false);
+    }
+    private LiveData<QueryStatus<User>> getUser(String userId, Boolean isCurrentUser){
         DocumentReference repo_user = getUsersCollection().document(userId);
-        LiveData<QueryStatus<UserDoc>> data = DocumentTo.liveData(repo_user.get(), UserDoc.class);
+        LiveData<QueryStatus<UserDoc>> data = DocumentTo.liveData(repo_user, UserDoc.class);
         return Transformations.map(data,input -> {
             QueryStates state = input.getState();
             switch (state){
@@ -131,7 +160,7 @@ public class repository {
                     if (input.getData() == null) {
                         return new QueryStatus.Error<User>("No User Found");
                     }
-                    return new QueryStatus.Success<>(new User(input.getData()));
+                    return new QueryStatus.Success<>(new User(input.getData(), isCurrentUser));
                 case Error:
                     if (input.getError() != null) {
                         return new QueryStatus.Error<>(input.getError());

@@ -1,6 +1,7 @@
-package com.colibri.appconnect;
+package com.colibri.appconnect.triage;
 
-public class User {
+
+public class User  {
 
     String userId;
     String name;
@@ -10,7 +11,8 @@ public class User {
         this.name = name;
     }
 
-    User(){}
+    User(){
+    }
 
     public String getUserId() {
         return userId;

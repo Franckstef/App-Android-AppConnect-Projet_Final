@@ -1,16 +1,10 @@
 package com.colibri.appconnect.userprofile;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.widget.ImageView;
-
-import androidx.annotation.NonNull;
 
 import com.colibri.appconnect.R;
 import com.colibri.appconnect.data.entity.User;
 import com.squareup.picasso.Picasso;
-
-import java.util.Objects;
 
 public class UserProfile {
 

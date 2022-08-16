@@ -3,6 +3,8 @@ package com.colibri.appconnect.data.firestore.document;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.PropertyName;
 
+import java.util.Objects;
+
 public class UserDoc extends FirestoreDocument{
 
     private String displayName;
@@ -84,5 +86,19 @@ public class UserDoc extends FirestoreDocument{
                 "docId='" + getDocId() + '\'' +
                 ", name='" + displayName + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        UserDoc userDoc = (UserDoc) o;
+        return Objects.equals(displayName, userDoc.displayName) && Objects.equals(avatar, userDoc.avatar) && Objects.equals(infoPersonal, userDoc.infoPersonal) && Objects.equals(infoHr, userDoc.infoHr);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), displayName, avatar, infoPersonal, infoHr);
     }
 }
