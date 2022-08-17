@@ -33,6 +33,9 @@ public class DetailsNewsActivity extends AppCompatActivity {
         article.setText(bundle.getString("article"));
         date.setText(bundle.getString("date"));
 
+        String uri = "@drawable/" + bundle.getString("image");
+        int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+        image.setImageResource(imageResource);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 
+import com.colibri.appconnect.News;
 import com.colibri.appconnect.data.entity.User;
 import com.colibri.appconnect.data.firestore.document.UserDoc;
 import com.colibri.appconnect.data.firestore.firestorelive.CollectionTo;
@@ -38,6 +39,11 @@ public class repository {
     private final Authentication auth = Authentication.getInstance();
     private final MutableLiveData<String> currentUserId =  new MutableLiveData<>();
     private CollectionReference getUsersCollection() {return firestore.collection("repo_user");}
+    private CollectionReference getNewsCollection() {return firestore.collection("news_feed");}
+
+    public LiveData<QueryStatus<List<News>>> getNewsFeed(){
+        return CollectionTo.liveData(getNewsCollection().get(), News.class);
+    }
 
     public void SignOut(){
         auth.signout();
@@ -147,6 +153,7 @@ public class repository {
            }
         });
     }
+
     public LiveData<QueryStatus<User>> getUser(String userId) {
         return getUser(userId,false);
     }
