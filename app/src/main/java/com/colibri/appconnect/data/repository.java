@@ -10,7 +10,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 
 import com.colibri.appconnect.News;
+import com.colibri.appconnect.data.entity.ChatRoom;
 import com.colibri.appconnect.data.entity.User;
+import com.colibri.appconnect.data.firestore.document.ChatDoc;
 import com.colibri.appconnect.data.firestore.document.UserDoc;
 import com.colibri.appconnect.data.firestore.firestorelive.CollectionTo;
 import com.colibri.appconnect.data.firestore.firestorelive.DocumentTo;
@@ -40,6 +42,7 @@ public class repository {
     private final MutableLiveData<String> currentUserId =  new MutableLiveData<>();
     private CollectionReference getUsersCollection() {return firestore.collection("repo_user");}
     private CollectionReference getNewsCollection() {return firestore.collection("news_feed");}
+    private CollectionReference getChatsCollection() {return firestore.collection("chats");}
 
     public LiveData<QueryStatus<List<News>>> getNewsFeed(){
         return CollectionTo.liveData(getNewsCollection().get(), News.class);
@@ -47,6 +50,45 @@ public class repository {
 
     public void SignOut(){
         auth.signout();
+    }
+
+    public LiveData<QueryStatus<ChatRoom>> getChatroom(String chatroomId){
+        LiveData<QueryStatus<ChatDoc>> queryChatDoc = DocumentTo.liveData(getChatsCollection().document(chatroomId), ChatDoc.class);
+        return Transformations.map(queryChatDoc, input -> {
+            switch (input.getState()){
+                case Success:
+                    return new QueryStatus.Success<>(new ChatRoom(input.getData()));
+                case Error:
+                    return new QueryStatus.Error<>(input.getMessage());
+                case Loading:
+                    return new QueryStatus.Loading<>();
+                default:
+                    return new QueryStatus.Error<>("Unknown Error");
+            }
+                }
+        );
+    }
+
+    public LiveData<QueryStatus<List<ChatRoom>>> getChatroomList(){
+        LiveData<QueryStatus<List<ChatDoc>>> queryChatList = CollectionTo.liveData(getChatsCollection(), ChatDoc.class);
+        return Transformations.map(queryChatList, input -> {
+                    switch (input.getState()){
+                        case Success:
+                            List<ChatRoom> returnList = new ArrayList<>();
+                            for (ChatDoc chatDoc :
+                                    input.getData()) {
+                                returnList.add(new ChatRoom(chatDoc));
+                            }
+                            return new QueryStatus.Success<>(returnList);
+                        case Error:
+                            return new QueryStatus.Error<>(input.getMessage());
+                        case Loading:
+                            return new QueryStatus.Loading<>();
+                        default:
+                            return new QueryStatus.Error<>("Unknown Error");
+                    }
+                }
+        );
     }
 
     public LiveData<Boolean> isSignIn(){
