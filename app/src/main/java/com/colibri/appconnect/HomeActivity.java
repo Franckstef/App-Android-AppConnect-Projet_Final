@@ -82,7 +82,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnBu
 
         setBottomNavigation();
 
-        TestChatRoom();
+//        TestChatRoom();
     }
 
 
