@@ -27,6 +27,10 @@ public class ChatRoom {
         this.document = document;
     }
 
+    public String getName(){
+        return document.getName();
+    }
+
     private CollectionReference getMessageCollection(){
         return document.getDocumentReference().collection("messages");
     }
@@ -45,8 +49,8 @@ public class ChatRoom {
         return CollectionTo.liveData(getMessagesQuery().get(), MessageDoc.class);
     }
     
-    public void sendMessage(Message message){
-        // TODO: 2022-08-17 To implement
+    public void sendMessage(MessageDoc message){
+       getMessageCollection().add(message);
     }
 
     @Override

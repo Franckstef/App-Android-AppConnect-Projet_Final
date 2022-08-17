@@ -51,6 +51,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnBu
             for (ChatRoom room :
                     listQueryStatus.getData()) {
                 room.getLiveMessages().observe(this,this::OnChatroomMessageChanged);
+                room.sendMessage(new MessageDoc("Allo! Sebastien!"));
             }
         }
     }

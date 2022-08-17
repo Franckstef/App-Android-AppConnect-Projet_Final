@@ -69,8 +69,14 @@ public class repository {
         );
     }
 
+//    public void addChatroom(ChatDoc chatDoc){
+//        getChatsCollection().add(chatDoc);
+//    }
+
     public LiveData<QueryStatus<List<ChatRoom>>> getChatroomList(){
-        LiveData<QueryStatus<List<ChatDoc>>> queryChatList = CollectionTo.liveData(getChatsCollection(), ChatDoc.class);
+        //String userId = "asd";
+        //getChatsCollection().whereArrayContains("users", userId);
+        LiveData<QueryStatus<List<ChatDoc>>> queryChatList = CollectionTo.liveData(getChatsCollection().get(), ChatDoc.class);
         return Transformations.map(queryChatList, input -> {
                     switch (input.getState()){
                         case Success:
