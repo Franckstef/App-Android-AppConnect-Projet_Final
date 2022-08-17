@@ -20,18 +20,47 @@ import androidx.fragment.app.FragmentManager;
 
 import com.colibri.appconnect.contactList.ContactFragment;
 import com.colibri.appconnect.data.Authenticator;
+import com.colibri.appconnect.data.entity.ChatRoom;
+import com.colibri.appconnect.data.entity.Message;
+import com.colibri.appconnect.data.firestore.document.MessageDoc;
 import com.colibri.appconnect.data.repository;
 import com.colibri.appconnect.databinding.ActivityHomeBinding;
+
 import com.colibri.appconnect.userprofile.ProfilFragment;
 import com.colibri.appconnect.util.QueryStates;
 import com.colibri.appconnect.util.QueryStatus;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements HomeFragment.OnButtonClickedListener {
 
     ActivityHomeBinding binding;
     repository repo;
     Authenticator authenticator;
+
+    private void TestChatRoom(){
+
+        repo.getChatroomList().observe(this, this::onListChatQueryChanged);
+    }
+
+    private void onListChatQueryChanged(QueryStatus<List<ChatRoom>> listQueryStatus) {
+        Log.d(TAG, "TestChatRoom: " + listQueryStatus);
+        if (listQueryStatus.isSuccessful()) {
+
+            for (ChatRoom room :
+                    listQueryStatus.getData()) {
+                room.getLiveMessages().observe(this,this::OnChatroomMessageChanged);
+            }
+        }
+    }
+
+    private void OnChatroomMessageChanged(QueryStatus<List<MessageDoc>> listMessageQuery){
+
+            Log.d(TAG, "OnChatroomMessageChanged: "+listMessageQuery);
+
+    }
+
     @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +80,11 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnBu
         setSupportActionBar(toolbar);
 
         setBottomNavigation();
+
+        TestChatRoom();
     }
+
+
 
     private void Authenticate(){
         repo.AuthenticateUser(authenticator)

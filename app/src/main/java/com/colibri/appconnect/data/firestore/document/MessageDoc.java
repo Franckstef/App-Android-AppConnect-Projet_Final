@@ -4,43 +4,36 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 
 public class MessageDoc extends FirestoreDocument{
-    private String message;
+    private String textMessage;
     private Timestamp timestamp = Timestamp.now();
 
-    public DocumentReference getSender() {
-        return sender;
-    }
+//    public DocumentReference getSender() {
+//        return sender;
+//    }
 
-    private DocumentReference sender;
+//    private DocumentReference sender;
 
     MessageDoc(){super();}
 
-    public MessageDoc(String message, DocumentReference sender) {
-        this.message = message;
-        this.sender = sender;
+    public MessageDoc(String textMessage) {
+        this.textMessage = textMessage;
     }
 
-    public String getMessage() {
-        return message;
+    public String getTextMessage() {
+        return textMessage;
     }
-//    public void setMessage(String message) {
-//        this.message = message;
-//    }
 
     public Timestamp getTimestamp() {
         return timestamp;
     }
-//    public void setTimestamp(Timestamp timestamp) {
-//        this.timestamp = timestamp;
-//    }
+
 
 
     @Override
     public String toString() {
         return "MessageDoc{" +
-                "message='" + message + '\'' +
-                ", timestamp=" + timestamp +
-                ", sender=" + sender.getPath() +
+                "message='" + textMessage + '\'' +
+//                ", timestamp=" + timestamp +
                 '}';
     }
 }

@@ -1,5 +1,7 @@
 package com.colibri.appconnect.data.entity;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 
 import com.colibri.appconnect.data.firestore.document.ChatDoc;
@@ -30,11 +32,13 @@ public class ChatRoom {
     }
 
     private Query getMessagesQuery() {
-        return getMessageCollection().orderBy("timeStamp");
+//        Log.d(TAG, "getMessagesQuery: Collection Path: "+ getMessageCollection().getPath());
+        return getMessageCollection().orderBy("timestamp");
     }
 
     public LiveData<QueryStatus<List<MessageDoc>>> getLiveMessages() {
         return CollectionTo.liveData(getMessagesQuery(), MessageDoc.class);
+
     }
 
     public LiveData<QueryStatus<List<MessageDoc>>> getMessagesSnapshot() {
@@ -42,6 +46,13 @@ public class ChatRoom {
     }
     
     public void sendMessage(Message message){
-        // TODO: 2022-08-17 To implement 
+        // TODO: 2022-08-17 To implement
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
+    private static final String TAG = "AP::ChatRoom";
 }

@@ -32,9 +32,14 @@ class QueryLiveDataNative<T> extends LiveData<QueryStatus<List<T>>> {
         listener = query.addSnapshotListener((querySnapshot, exception) -> {
             if (exception == null) {
                 if (querySnapshot != null) {
-                    setValue(new QueryStatus.Success<>(
-                            FirestoreLiveUtil.QueryToPojo(querySnapshot,aClass)
-                    ));
+//                    Log.d(TAG, "onActive: Result Nb: " + querySnapshot.size());
+                    if(querySnapshot.isEmpty()){
+                        setValue(new QueryStatus.Error<List<T>>("Empty Collection"));
+                    } else {
+                        setValue(new QueryStatus.Success<>(
+                                FirestoreLiveUtil.QueryToPojo(querySnapshot, aClass)
+                        ));
+                    }
                 }
             } else {
                 Log.e("FireStoreLiveData", "", exception);
@@ -52,6 +57,8 @@ class QueryLiveDataNative<T> extends LiveData<QueryStatus<List<T>>> {
             listener = null;
         }
     }
+
+    private static final String TAG = "AP::QueryLiveDataNative";
 }
 
 class QueryLiveDataCustom<T> extends LiveData<QueryStatus<List<T>>> {
