@@ -40,4 +40,8 @@ public class ChatRoom {
     public LiveData<QueryStatus<List<MessageDoc>>> getMessagesSnapshot() {
         return CollectionTo.liveData(getMessagesQuery().get(), MessageDoc.class);
     }
+    
+    public void sendMessage(Message message){
+        // TODO: 2022-08-17 To implement 
+    }
 }
