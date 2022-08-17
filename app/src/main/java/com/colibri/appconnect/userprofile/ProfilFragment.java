@@ -1,5 +1,6 @@
 package com.colibri.appconnect.userprofile;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.colibri.appconnect.ChatActivity;
 import com.colibri.appconnect.R;
 import com.colibri.appconnect.databinding.FragmentProfilBinding;
 
@@ -76,6 +78,11 @@ public class ProfilFragment extends Fragment {
         viewModel.setPhoneClickListener(v->{});
         viewModel.setSignOutClickListener(v->{});
         viewModel.setEmailClickListener(v->{});
+        viewModel.setChatClickAction(userId1 -> {
+            Intent intent = new Intent(container.getContext(), ChatActivity.class);
+            intent.putExtra(ChatActivity.USERTO, userId1);
+            startActivity(intent);
+        });
         binding.setLifecycleOwner(this);
         binding.setViewModel(viewModel);
 

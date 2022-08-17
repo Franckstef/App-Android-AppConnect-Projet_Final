@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.colibri.appconnect.R;
+import com.colibri.appconnect.StartChatAction;
 import com.colibri.appconnect.data.entity.User;
 import com.colibri.appconnect.data.repository;
 import com.colibri.appconnect.util.QueryStatus;
@@ -28,6 +29,7 @@ public class SharedUserProfileViewModel extends ViewModel {
     private View.OnClickListener phoneClickListener = null;
     private View.OnClickListener emailClickListener = null;
     private View.OnClickListener signOutClickListener = null;
+    private StartChatAction chatClickAction = null;
     private final repository repo = repository.getInstance();
     private final LiveData<QueryStatus<User>> userQuery;
     private final LiveData<Boolean> isLoading;
@@ -88,6 +90,10 @@ public class SharedUserProfileViewModel extends ViewModel {
         this.signOutClickListener = signOutClickListener;
     }
 
+    public void setChatClickAction(StartChatAction chatClickAction) {
+        this.chatClickAction = chatClickAction;
+    }
+
     private List<ActionButtonBinding> getActionButtons(User user){
         if (user == null) {
             return null;
@@ -125,11 +131,16 @@ public class SharedUserProfileViewModel extends ViewModel {
     }
 
     private ActionButtonBinding getChatActionButton(User user){
-        if(user.getIsCurrentUser()){
+        if(user.getIsCurrentUser() && chatClickAction != null){
             return null;
         }
+        ActionButtonBinding chatButton = new ActionButtonBinding(R.drawable.ic_message, "Envoyer un message");
 
-        return new ActionButtonBinding(R.drawable.ic_message, "Envoyer un message");
+        chatButton.setOnClickListener(view -> {
+            chatClickAction.startChatWith(user.getId());
+        });
+        chatButton.setIsHighlighted(true);
+        return chatButton;
     }
     
     private ActionButtonBinding getPhoneActionButton(User user){
