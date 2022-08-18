@@ -13,6 +13,7 @@ import java.util.Objects;
 
 public class MessageDoc extends FirestoreDocument{
     private String textMessage;
+    private String userToId;
     private Timestamp timestamp = Timestamp.now();
 
 //    public DocumentReference getSender() {
@@ -23,8 +24,28 @@ public class MessageDoc extends FirestoreDocument{
 
     MessageDoc(){super();}
 
-    public MessageDoc(String textMessage) {
+    public MessageDoc(String textMessage, String userToId) {
         this.textMessage = textMessage;
+        this.userToId = userToId;
+    }
+
+    public String getUserToId() {
+        return userToId;
+    }
+
+    public MessageDoc setUserToId(String userToId) {
+        this.userToId = userToId;
+        return this;
+    }
+
+    public MessageDoc setTextMessage(String textMessage) {
+        this.textMessage = textMessage;
+        return this;
+    }
+
+    public MessageDoc setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+        return this;
     }
 
     public String getTextMessage() {
