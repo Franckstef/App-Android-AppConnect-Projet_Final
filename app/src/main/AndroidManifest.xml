@@ -18,6 +18,9 @@
         android:theme="@style/Theme.AppConnect"
         tools:targetApi="31">
         <activity
+            android:name=".RessourcesActivity"
+            android:exported="false" />
+        <activity
             android:name=".DetailsNewsActivity"
             android:exported="false" />
         <activity

@@ -9,6 +9,18 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search">Search</string>
     <string name="ProfileAction_Chat">Envoyer un message</string>
+    <string name="entreprise">Colibris Féroce</string>
+    <string name="adresse">"23, Chemin de la route du bonheur,
+"H5K 8H6, Montréal, QC, CA</string>
+    <string name="telEntreprise">514-895-6500</string>
+    <string name="mailEntreprise">colibrisferoce@gmail.com</string>
+    <string name="RH">Ressources humaines</string>
+    <string name="directrice">Marie Latulippe, Directrice des ressources humaines</string>
+    <string name="telDirectrice">514-589-6233</string>
+    <string name="mailDirectrice">marielatulippe@gmail.com</string>
+    <string name="adjoint">Bob Leforgeron, Directeur adjoint des ressources humaines</string>
+    <string name="telAdjoint">514-247-1288</string>
+    <string name="mailAdjoint">bobleforgeron@gmail.com</string>
     <string name="Auth_InfoMissing">Entrez votre courriel et votre mots de passe</string>
     <string name="AuthError_UserCancel">Authentification annuller par l\'utilisateur</string>
     <string name="AuthError_NoNetwork">Erreur d\'authentification: Aucune connection internet disponible</string>
