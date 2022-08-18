@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.colibri.appconnect.contactList.ContactListAdapter;
 import com.colibri.appconnect.data.entity.ChatRoom;
 import com.colibri.appconnect.data.entity.User;
+import com.colibri.appconnect.data.firestore.document.ChatDoc;
 import com.colibri.appconnect.data.firestore.document.MessageDoc;
 import com.colibri.appconnect.data.repository;
 import com.colibri.appconnect.databinding.ActivityChatBinding;
@@ -33,7 +34,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private ActivityChatBinding binding;
     private CollectionReference colRef;
-    private String userTo;
+
     private Timestamp timestamp = null;
 
 
@@ -51,20 +52,53 @@ public class ChatActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.rvChatMessageHistory.setLayoutManager(linearLayoutManager);
         binding.rvChatMessageHistory.setAdapter(chatRoomListAdapter);
-        userTo = getIntent().getStringExtra(USERTO);
 
-        LiveData<QueryStatus<ChatRoom>> chatroom = repository.getInstance().getChatroom("4O4t9hpFwDRyonsEGO4JJo8pfZI3_9D1GRUQrxhaZlPGI15N1UVQ1WyB2");
+        checkIfExistChatRoom();
+
+
+    }
+
+    private void setAdapter(String chatRoomid) {
+        LiveData<QueryStatus<ChatRoom>> chatroom = repository.getInstance().getChatroom(chatRoomid);
         chatroom.observe(this, chatRoomQueryStatus -> {
             if (chatRoomQueryStatus.isSuccessful()) {
                 chatRoomQueryStatus.getData().getLiveMessages().observe(this, messages -> {
                     if (messages.isSuccessful()) {
-                        chatRoomListAdapter.submitList(messages.getData());
+                        ((ChatRoomListAdapter) binding.rvChatMessageHistory.getAdapter()).submitList(messages.getData());
                     }
                 });
 //                chatRoomListAdapter.submitList(Objects.requireNonNull(chatRoomQueryStatus.getData().getLiveMessages());
             }
 
         });
+    }
+
+    private void checkIfExistChatRoom() {
+        LiveData<QueryStatus<List<ChatRoom>>> chatRoomList = repository.getInstance().getChatroomList();
+        chatRoomList.observe(this, chatRoomListQueryStatus -> {
+            if (chatRoomListQueryStatus.isSuccessful()){
+                String chatRoomId = buildChatChannel(getIntent().getStringExtra(USERTO));
+//                if (!chatRoomListQueryStatus.getData().contains(chatRoomId)){
+//                    repository.getInstance().addChatroom(new ChatDoc(chatRoomId));
+//                }
+
+                setAdapter(chatRoomId);
+            }
+        });
+    }
+
+    private String buildChatChannel(String userTo){
+
+        String chatChannel = "";
+
+        int result = userTo.compareTo(USERID);
+
+        if(result < 0){
+            chatChannel = userTo + "_" + USERID;
+        }else{
+            chatChannel = USERID + "_" + userTo;
+        }
+        return chatChannel;
     }
 }
 //
@@ -137,17 +171,5 @@ public class ChatActivity extends AppCompatActivity {
 //                .collection("messages");
 //    }
 //
-//    private String buildChatChannel(){
-//
-//        String chatChannel = "";
-//
-//        int result = userTo.compareTo(USERID);
-//
-//        if(result < 0){
-//            chatChannel = userTo + "_" + USERID;
-//        }else{
-//            chatChannel = USERID + "_" + userTo;
-//        }
-//        return chatChannel;
-//    }
+
 //    }
