@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="isSignIn"
+            type="Boolean" />
+        <variable
+            name="isAuthenticating"
+            type="Boolean" />
+    </data>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:srcCompat="@drawable/ic_colibri" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp"
+        android:text="Connection"
+        android:visibility="@{isAuthenticating?View.VISIBLE:View.GONE}"
+        tools:visibility="visible"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:visibility="@{isAuthenticating?View.VISIBLE:View.GONE}"
+        tools:visibility="visible"
+        android:layout_height="100dp" />
+
+
+    <Button
+        android:id="@+id/button_connection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp"
+        android:visibility="@{isAuthenticating?View.GONE:View.VISIBLE}"
+        tools:visibility="visible"
+        android:text="Se connecter" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="80dp" />
+</LinearLayout>
+</layout>

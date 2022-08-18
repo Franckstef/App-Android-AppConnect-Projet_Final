@@ -5,17 +5,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
-            name="userProfile"
-            type="com.colibri.appconnect.userprofile.UserProfile" />
-        <variable
-            name="action1"
-            type="com.colibri.appconnect.userprofile.ActionButtonBinding" />
-        <variable
-            name="action2"
-            type="com.colibri.appconnect.userprofile.ActionButtonBinding" />
-        <variable
-            name="action3"
-            type="com.colibri.appconnect.userprofile.ActionButtonBinding" />
+            name="viewModel"
+            type="com.colibri.appconnect.userprofile.SharedUserProfileViewModel" />
+
     </data>
 
     <LinearLayout
@@ -37,12 +29,14 @@
             >
 
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profile_image"
                 android:layout_width="125dp"
                 android:layout_height="125dp"
                 android:layout_margin="32dp"
                 android:padding="5dp"
+                android:userPicture="@{viewModel.userProfile.avatar}"
                 app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                app:srcCompat="@drawable/user"
+                tools:srcCompat="@drawable/user"
                 app:strokeColor="@color/white"
                 app:strokeWidth="5dp" />
 
@@ -50,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:text="@{userProfile.displayName}"
+                android:text="@{viewModel.userProfile.displayName}"
                 tools:text="Mon nom"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
@@ -59,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:text="@{userProfile.title}"
+                android:text="@{viewModel.userProfile.title}"
                 tools:text="Mon titre"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
@@ -68,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:text="@{userProfile.location}"
+                android:text="@{viewModel.userProfile.location}"
                 tools:text="Mon lieux de travail"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
@@ -77,31 +71,20 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
             android:layout_marginVertical="16dp">
 
 
-            <include layout="@layout/tmp_action_button"
-                bind:action="@{action1}"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                />
-            <include layout="@layout/tmp_action_button"
-                bind:action="@{action2}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                />
-            <include layout="@layout/tmp_action_button"
-                bind:action="@{action3}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                />
+                app:layoutManager="LinearLayoutManager"
+                android:adapter="@{viewModel.adapter}"
+                tools:listitem="@layout/tmp_action_button" />
 
 
 
