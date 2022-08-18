@@ -19,7 +19,7 @@ public class DetailsNewsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle("");
+        toolbar.setTitle("Actualités");
 
         ImageView image = findViewById(R.id.imageView);
         TextView titre = findViewById(R.id.textTitre);
@@ -33,16 +33,16 @@ public class DetailsNewsActivity extends AppCompatActivity {
         article.setText(bundle.getString("article"));
         date.setText(bundle.getString("date"));
 
+        String uri = "@drawable/" + bundle.getString("image");
+        int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+        image.setImageResource(imageResource);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 }

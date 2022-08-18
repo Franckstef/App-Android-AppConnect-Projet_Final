@@ -47,7 +47,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
     @Override
     public NewsFeedAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View listItem = inflater.inflate(R.layout.list_newsfeed, parent, false);
+        View listItem = inflater.inflate(R.layout.newsfeed_item, parent, false);
         return new NewsFeedAdapter.ViewHolder(listItem);
     }
 

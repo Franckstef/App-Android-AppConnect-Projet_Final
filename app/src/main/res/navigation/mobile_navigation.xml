@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_contact"
-        android:name="com.colibri.appconnect.ContactFragment"
+        android:name="com.colibri.appconnect.contactList.ContactFragment"
         android:label="Contact"
         tools:layout="@layout/fragment_contact" />
 

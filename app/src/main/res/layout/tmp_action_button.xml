@@ -12,11 +12,13 @@
     </data>
     <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:cardBackgroundColor="@{action.highlighted ?  @color/design_default_color_secondary : @color/design_default_color_surface}"
+    android:layout_height="wrap_content"
+    android:onClick="@{action}"
+        android:cardBackgroundColor="@{action}"
     app:cardCornerRadius="12dp"
+        android:layout_margin="8dp"
     app:cardElevation="0dp"
-        android:visibility="@{action != null ? View.VISIBLE : View.GONE}"
+        android:visibility="@{action != null}"
     >
 
     <LinearLayout
@@ -33,7 +35,7 @@
             android:layout_marginEnd="16dp"
             android:padding="6dp"
 
-            app:imageDrawable="@{action.icon}"
+            android:actionIcon="@{action}"
             app:tint="@color/design_default_color_on_secondary"
             tools:ignore="ContentDescription"
             tools:srcCompat="@android:drawable/ic_menu_help" />

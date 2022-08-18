@@ -6,7 +6,7 @@
     <data>
         <variable
             name="user"
-            type="com.colibri.appconnect.User" />
+            type="com.colibri.appconnect.data.entity.User" />
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +26,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/user" />
+        android:userPicture="@{user.avatar}"
+         />
 
     <TextView
         android:id="@+id/tvUserName"
@@ -36,7 +37,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
-        android:text="@{user.name}"
+        android:text="@{user.displayName}"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/ivUserAvatar"
@@ -51,7 +52,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp"
-        android:text="@{user.userId}"
+        android:text="@{user.title}"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
