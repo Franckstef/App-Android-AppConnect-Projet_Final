@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 
@@ -18,7 +17,6 @@ public class MenuFragment extends Fragment {
 
     public MenuFragment() {
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,13 +63,12 @@ public class MenuFragment extends Fragment {
     private void setGridViewHeightBasedOnChildren(GridView gridView, int noOfColumns) {
         ListAdapter gridViewAdapter = gridView.getAdapter();
         if (gridViewAdapter == null) {
-            // adapter is not set yet
             return;
         }
 
-        int totalHeight; //total height to set on grid view
-        int items = gridViewAdapter.getCount(); //no. of items in the grid
-        int rows; //no. of rows in grid
+        int totalHeight;
+        int items = gridViewAdapter.getCount();
+        int rows;
 
         View listItem = gridViewAdapter.getView(0, null, gridView);
         listItem.measure(0, 0);
@@ -81,19 +78,15 @@ public class MenuFragment extends Fragment {
         if( items > noOfColumns ){
             x = items/noOfColumns;
 
-            //Check if exact no. of rows of rows are available, if not adding 1 extra row
             if(items%noOfColumns != 0) {
                 rows = (int) (x + 1);
             }else {
                 rows = (int) (x);
             }
             totalHeight *= rows;
-
-            //Adding any vertical space set on grid view
             totalHeight += gridView.getVerticalSpacing() * rows;
         }
 
-        //Setting height on grid view
         ViewGroup.LayoutParams params = gridView.getLayoutParams();
         params.height = totalHeight;
         gridView.setLayoutParams(params);

@@ -20,6 +20,7 @@ public class DetailsNewsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle("Actualités");
+        toolbar.setTitleTextAppearance(this, R.style.toolbar);
 
         ImageView image = findViewById(R.id.imageView);
         TextView titre = findViewById(R.id.textTitre);
