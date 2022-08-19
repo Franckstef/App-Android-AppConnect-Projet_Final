@@ -26,6 +26,7 @@ public class MenuFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Menu");
         view = inflater.inflate(R.layout.fragment_menu, container, false);
         GridView menu = view.findViewById(R.id.gridMenu);
 

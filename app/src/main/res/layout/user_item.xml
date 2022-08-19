@@ -31,7 +31,7 @@
 
     <TextView
         android:id="@+id/tvUserName"
-        style="@style/textIntro"
+        style="@style/nomPrenom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -45,7 +45,7 @@
 
     <TextView
         android:id="@+id/tvUserUid"
-        style="@style/textArticle"
+        style="@style/poste"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
