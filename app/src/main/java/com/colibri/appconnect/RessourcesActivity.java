@@ -5,6 +5,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.GridView;
+import android.widget.ImageView;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -15,10 +17,12 @@ public class RessourcesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ressources);
 
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle("Ressources");
+        toolbar.setTitleTextAppearance(this, R.style.toolbar);
 
         GridView menu = findViewById(R.id.gridRessources);
 

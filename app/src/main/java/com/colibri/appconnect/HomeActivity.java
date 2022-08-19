@@ -3,6 +3,7 @@ package com.colibri.appconnect;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -79,6 +80,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnBu
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitleTextAppearance(this, R.style.toolbar);
 
         setBottomNavigation();
 

@@ -30,6 +30,7 @@ public class MenuItemAdapter extends ArrayAdapter<MenuItem> {
         MenuItem item = getItem(position);
         TextView titre = listitemView.findViewById(R.id.textTitre);
         ImageView image = listitemView.findViewById(R.id.imageMenu);
+        image.setClipToOutline(true);
         titre.setText(item.getName());
         image.setImageResource(item.getImg());
 

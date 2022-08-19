@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.colibri.appconnect.CustomAdaptor;
+import com.colibri.appconnect.HomeActivity;
 import com.colibri.appconnect.OnItemClickListener;
 import com.colibri.appconnect.R;
 import com.colibri.appconnect.data.entity.User;
@@ -58,6 +59,7 @@ public class ContactFragment extends Fragment implements ContactClickListener{
                 linearLayoutManager.getOrientation());
         binding.rvConversation.addItemDecoration(dividerItemDecoration);
 
+        ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Contact");
 
         LiveData<QueryStatus<List<User>>> listUser = repository.getInstance().getListUser();
         listUser.observe(getViewLifecycleOwner(), users ->{

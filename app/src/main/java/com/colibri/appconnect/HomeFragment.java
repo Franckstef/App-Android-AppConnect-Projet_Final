@@ -46,6 +46,7 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        ((HomeActivity) getActivity()).getSupportActionBar().setTitle("AppConnect");
         view = inflater.inflate(R.layout.fragment_home, container, false);
         viewPager = view.findViewById(R.id.viewPager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getContext(), images);

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.colibri.appconnect.ChatActivity;
+import com.colibri.appconnect.HomeActivity;
 import com.colibri.appconnect.R;
 import com.colibri.appconnect.databinding.FragmentProfilBinding;
 
@@ -67,6 +68,7 @@ public class ProfilFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Profil");
         // Inflate the layout for this fragment
         FragmentProfilBinding binding = DataBindingUtil.inflate(
                 inflater,

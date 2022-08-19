@@ -30,6 +30,7 @@ public class RessourcesAdapter extends ArrayAdapter<MenuItem> {
         MenuItem item = getItem(position);
         TextView titre = listitemView.findViewById(R.id.textTitre);
         ImageView image = listitemView.findViewById(R.id.imageRessources);
+        image.setClipToOutline(true);
         titre.setText(item.getName());
         image.setImageResource(item.getImg());
 
