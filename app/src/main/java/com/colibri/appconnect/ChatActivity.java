@@ -27,6 +27,7 @@ import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
 
+    public static final String CHATROOMID = "4O4t9hpFwDRyonsEGO4JJo8pfZI3_9D1GRUQrxhaZlPGI15N1UVQ1WyB2";
     public static final String USERTO = "userTo";
     private static final String TAG = "ChatActivity";
     private final String USERID = "9D1GRUQrxhaZlPGI15N1UVQ1WyB2";
@@ -54,8 +55,17 @@ public class ChatActivity extends AppCompatActivity {
         binding.rvChatMessageHistory.setAdapter(chatRoomListAdapter);
 
         checkIfExistChatRoom();
+        binding.btnChatSend.setOnClickListener(v -> {
+            Log.d(TAG, "onCreate: clicker sur send : " +binding.etChatMessage.getText().toString());
+            LiveData<QueryStatus<ChatRoom>> chatroom = repository.getInstance().getChatroom(CHATROOMID);
+            chatroom.observe(this, chatRoomQueryStatus -> {
+                if (chatRoomQueryStatus.isSuccessful()) {
+                    ChatRoom room = chatRoomQueryStatus.getData();
+                    room.sendMessage(new MessageDoc(binding.etChatMessage.getText().toString(), "userToId"));
+                }
+            });
 
-
+        });
     }
 
     private void setAdapter(String chatRoomid) {
@@ -64,12 +74,11 @@ public class ChatActivity extends AppCompatActivity {
             if (chatRoomQueryStatus.isSuccessful()) {
                 chatRoomQueryStatus.getData().getLiveMessages().observe(this, messages -> {
                     if (messages.isSuccessful()) {
-                        ((ChatRoomListAdapter) binding.rvChatMessageHistory.getAdapter()).submitList(messages.getData());
+                        ((ChatRoomListAdapter) binding.rvChatMessageHistory.getAdapter()).submitList(Objects.requireNonNull(messages.getData()));
                     }
                 });
 //                chatRoomListAdapter.submitList(Objects.requireNonNull(chatRoomQueryStatus.getData().getLiveMessages());
             }
-
         });
     }
 
@@ -81,8 +90,8 @@ public class ChatActivity extends AppCompatActivity {
 //                if (!chatRoomListQueryStatus.getData().contains(chatRoomId)){
 //                    repository.getInstance().addChatroom(new ChatDoc(chatRoomId));
 //                }
-
-                setAdapter(chatRoomId);
+                // TODO: trouver comment creer un chatroom avec le chatRoomId
+                setAdapter("4O4t9hpFwDRyonsEGO4JJo8pfZI3_9D1GRUQrxhaZlPGI15N1UVQ1WyB2");
             }
         });
     }
