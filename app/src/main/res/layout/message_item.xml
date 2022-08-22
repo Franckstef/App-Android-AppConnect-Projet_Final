@@ -4,9 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="messageDoc"
             type="com.colibri.appconnect.data.firestore.document.MessageDoc" />
+        <variable
+            name="isFromMe"
+            type="boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,7 +46,8 @@
             app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
             app:strokeColor="@color/white"
             app:strokeWidth="5dp"
-            tools:srcCompat="@drawable/user" />
+            tools:srcCompat="@drawable/user"
+            android:visibility='@{isFromMe ? View.GONE : View.VISIBLE}'/>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/layout"
@@ -52,7 +57,7 @@
             android:adjustViewBounds="true"
             android:cropToPadding="true"
             android:foregroundGravity="right"
-            app:cardBackgroundColor="#2f63fd"
+            app:cardBackgroundColor="@{isFromMe ? @color/teal_200 : @color/purple_700}"
             app:cardCornerRadius="8dp"
             app:cardElevation="0dp"
             app:cardPreventCornerOverlap="false"

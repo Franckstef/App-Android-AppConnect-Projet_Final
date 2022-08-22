@@ -15,12 +15,15 @@ import com.colibri.appconnect.data.entity.User;
 import com.colibri.appconnect.data.firestore.document.MessageDoc;
 import com.colibri.appconnect.databinding.MessageItemBinding;
 import com.colibri.appconnect.databinding.UserItemBinding;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Objects;
 
 
 public class ChatRoomListAdapter extends ListAdapter<MessageDoc, ChatRoomListAdapter.ContactHolder> {
 
     ContactClickListener contactClickListener;
-
+    boolean isFromMe = false;
     protected ChatRoomListAdapter() {
         super(MessageDoc.diffCallback);
     }
@@ -48,6 +51,10 @@ public class ChatRoomListAdapter extends ListAdapter<MessageDoc, ChatRoomListAda
             binding = MessageItemBinding.bind(itemView);
         }
         void bind(MessageDoc abb){
+            if (Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid().equals(abb.getUserToId())) {
+                isFromMe = true;
+            }
+            binding.setIsFromMe(isFromMe);
             binding.setMessageDoc(abb);
 
         }
