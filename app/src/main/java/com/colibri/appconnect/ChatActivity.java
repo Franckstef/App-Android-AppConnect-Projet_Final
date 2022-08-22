@@ -4,29 +4,27 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.colibri.appconnect.data.entity.ChatRoom;
+import com.colibri.appconnect.data.firestore.document.ChatDoc;
+import com.colibri.appconnect.data.firestore.document.MessageDoc;
+import com.colibri.appconnect.data.repository;
 import com.colibri.appconnect.databinding.ActivityChatBinding;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import com.colibri.appconnect.util.QueryStatus;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
 
     public static final String USERTO = "userTo";
     private static final String TAG = "ChatActivity";
-    private final String USERID = "9D1GRUQrxhaZlPGI15N1UVQ1WyB2";
 
-
+    private boolean exist = false;
     private ActivityChatBinding binding;
-    private CollectionReference colRef;
-    private String userTo;
-    private Timestamp timestamp = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,95 +32,78 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        if(!getIntent().hasExtra(USERTO)){
+        if (!getIntent().hasExtra(USERTO)) {
             finish();
         }
 
-        userTo = getIntent().getStringExtra(USERTO);
-
-
-
-        ChatAdaptor chatAdaptor = new ChatAdaptor(new ArrayList<>(), null);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
-        // in below two lines we are setting layoutmanager and adapter to our recycler view.
+        ChatRoomListAdapter chatRoomListAdapter = new ChatRoomListAdapter();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.rvChatMessageHistory.setLayoutManager(linearLayoutManager);
-        binding.rvChatMessageHistory.setAdapter(chatAdaptor);
+        binding.rvChatMessageHistory.setAdapter(chatRoomListAdapter);
 
-        setCollRef();
-        colRef.orderBy("timestamp")
-                .limit(10)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        QueryDocumentSnapshot lastDoc = null;
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Message m = new Message();
-                            m.setTextMessage(document.getString("textMessage"));
-                            chatAdaptor.addMessage(m);
-                            lastDoc = document;
-                        }
-                        timestamp = (lastDoc != null) ? lastDoc.getTimestamp("timestamp") : timestamp;
-                        if(timestamp != null)
-                            Log.d(TAG, timestamp.toString());
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
-                    }
-                });
+        checkIfExistChatRoom();
 
-        colRef.addSnapshotListener((value, e) -> {
-            if (e != null) {
-                Log.w(TAG, "Listen failed.", e);
-            }
-            colRef.whereGreaterThan("timestamp" ,timestamp)
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            QueryDocumentSnapshot lastDoc = null;
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Message m = new Message();
-                                m.setTextMessage(document.getString("textMessage"));
-                                chatAdaptor.addMessage(m);
-                                lastDoc = document;
-                            }
-                            timestamp = (lastDoc != null) ? lastDoc.getTimestamp("timestamp") : timestamp;
-
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+        binding.btnChatSend.setOnClickListener(v -> {
+                if(!exist){
+                    repository.getInstance().addChatroom(new ChatDoc(buildChatChannel(getIntent().getStringExtra(USERTO))),
+                            new MessageDoc(binding.etChatMessage.getText().toString(), "userToId")
+                            ,()->{
+                        setAdapter(buildChatChannel(getIntent().getStringExtra(USERTO)));
+                    });
+                }
+                else{
+                    String userFromId = FirebaseAuth.getInstance().getUid();
+                    repository.getInstance().getChatroom(buildChatChannel(getIntent().getStringExtra(USERTO))).observe(this, test -> {
+                        if(test.isSuccessful()){
+                            test.getData()
+                                    .sendMessage(new MessageDoc(binding.etChatMessage.getText().toString(), userFromId), null);
                         }
                     });
-        });
 
-        binding.btnChatSend.setOnClickListener( view -> {
 
-            Map<String, Object> msg = new HashMap<>();
-            msg.put("textMessage", binding.etChatMessage.getText().toString());
-            msg.put("timestamp", Timestamp.now());
+                    Log.e(TAG, "onCreate: else" );
+                }
 
-            colRef.add(msg).addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId()))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+            });
 
-            binding.etChatMessage.setText("");
+    }
+
+    private void setAdapter(String chatRoomid) {
+        LiveData<QueryStatus<ChatRoom>> chatroom = repository.getInstance().getChatroom(chatRoomid);
+        chatroom.observe(this, chatRoomQueryStatus -> {
+            if (chatRoomQueryStatus.isSuccessful()) {
+                chatRoomQueryStatus.getData().getLiveMessages().observe(this, messages -> {
+                    if (messages.isSuccessful()) {
+                        ((ChatRoomListAdapter) binding.rvChatMessageHistory.getAdapter()).submitList(Objects.requireNonNull(messages.getData()));
+                        exist = true;
+                    }
+                });
+            }
         });
     }
 
-
-    void  setCollRef(){
-
-        colRef = FirebaseFirestore.getInstance().collection("chats")
-                .document(buildChatChannel())
-                .collection("messages");
+    private void checkIfExistChatRoom() {
+        String chatRoomId = buildChatChannel(getIntent().getStringExtra(USERTO));
+        repository.getInstance().getChatroom(chatRoomId).observe(this, chatRoom ->{
+            if(chatRoom.getData() != null && chatRoom.isSuccessful()){
+                setAdapter(buildChatChannel(getIntent().getStringExtra(USERTO)));
+            }
+        });
     }
 
-    private String buildChatChannel(){
+    private String buildChatChannel(String userTo){
 
         String chatChannel = "";
 
-        int result = userTo.compareTo(USERID);
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        Log.d(TAG, "buildChatChannel: " +user);
+        int result = userTo.compareTo(user);
 
         if(result < 0){
-            chatChannel = userTo + "_" + USERID;
+            chatChannel = userTo + "_" + user;
         }else{
-            chatChannel = USERID + "_" + userTo;
+            chatChannel = user + "_" + userTo;
         }
         return chatChannel;
     }
