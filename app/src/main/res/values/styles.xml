@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="toolbar" parent="TextAppearance.AppCompat">
+        <item name="android:textSize"> 22dp</item>
+        <item name="android:textColor"> @color/white</item>
+        <item name="android:fontFamily">@font/custom_font</item>
+    </style>
+
     <style name="titre" parent="TextAppearance.AppCompat">
         <item name="android:textSize"> 15dp</item>
         <item name="android:fontFamily">@font/custom_font</item>
@@ -33,6 +39,27 @@
         <item name="android:textStyle"> bold </item>
         <item name="android:textSize"> 18dp</item>
         <item name="fontFamily">@font/audiowide</item>
+        <item name="android:fontFamily">@font/custom_font2</item>
+    </style>
+
+    <style name="textBonjour" parent="TextAppearance.AppCompat">
+        <item name="android:textStyle"> normal </item>
+        <item name="android:textColor"> @color/white</item>
+        <item name="android:textSize"> 15dp</item>
+        <item name="android:fontFamily">@font/custom_font</item>
+    </style>
+
+    <style name="nomPrenom" parent="TextAppearance.AppCompat">
+        <item name="android:textStyle"> bold </item>
+        <item name="android:textColor"> @color/white</item>
+        <item name="android:textSize"> 16dp</item>
+        <item name="android:fontFamily">@font/custom_font</item>
+    </style>
+
+    <style name="poste" parent="TextAppearance.AppCompat">
+        <item name="android:textStyle"> normal </item>
+        <item name="android:textColor"> @color/white</item>
+        <item name="android:textSize"> 16dp</item>
         <item name="android:fontFamily">@font/custom_font2</item>
     </style>
 
