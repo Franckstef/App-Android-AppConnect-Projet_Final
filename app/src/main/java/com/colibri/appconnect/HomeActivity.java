@@ -21,11 +21,9 @@ import androidx.fragment.app.FragmentManager;
 import com.colibri.appconnect.contactList.ContactFragment;
 import com.colibri.appconnect.data.Authenticator;
 import com.colibri.appconnect.data.entity.ChatRoom;
-import com.colibri.appconnect.data.entity.Message;
 import com.colibri.appconnect.data.firestore.document.MessageDoc;
 import com.colibri.appconnect.data.repository;
 import com.colibri.appconnect.databinding.ActivityHomeBinding;
-
 import com.colibri.appconnect.userprofile.ProfilFragment;
 import com.colibri.appconnect.util.QueryStates;
 import com.colibri.appconnect.util.QueryStatus;
@@ -51,7 +49,6 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnBu
             for (ChatRoom room :
                     listQueryStatus.getData()) {
                 room.getLiveMessages().observe(this,this::OnChatroomMessageChanged);
-                room.sendMessage(new MessageDoc("Allo! Sebastien!", "userToId"));
             }
         }
     }

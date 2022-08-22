@@ -11,8 +11,10 @@ import androidx.lifecycle.Transformations;
 
 import com.colibri.appconnect.News;
 import com.colibri.appconnect.data.entity.ChatRoom;
+import com.colibri.appconnect.data.entity.OnNewChatRoom;
 import com.colibri.appconnect.data.entity.User;
 import com.colibri.appconnect.data.firestore.document.ChatDoc;
+import com.colibri.appconnect.data.firestore.document.MessageDoc;
 import com.colibri.appconnect.data.firestore.document.UserDoc;
 import com.colibri.appconnect.data.firestore.firestorelive.CollectionTo;
 import com.colibri.appconnect.data.firestore.firestorelive.DocumentTo;
@@ -69,8 +71,22 @@ public class repository {
         );
     }
 
-    public void addChatroom(ChatDoc chatDoc){
-        getChatsCollection().add(chatDoc);
+    public void addChatroom(ChatDoc chatDoc, MessageDoc messageDoc, OnNewChatRoom onNewChatRoom){
+        getChatsCollection().document(chatDoc.getName()).set(chatDoc).addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                getChatsCollection()
+                        .document(chatDoc.getName())
+                        .collection("messages")
+                        .add(messageDoc).addOnCompleteListener(newMessageDocTask ->{
+                            if(newMessageDocTask.isSuccessful()){
+                                Log.d(TAG, "addChatroom: " + chatDoc.getName());
+                                onNewChatRoom.onSuccess();
+                            }
+
+                        });
+
+            }
+        });
     }
 
     public LiveData<QueryStatus<List<ChatRoom>>> getChatroomList(){
