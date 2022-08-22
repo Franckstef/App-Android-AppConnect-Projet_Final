@@ -59,7 +59,7 @@ public class repository {
         return Transformations.map(queryChatDoc, input -> {
             switch (input.getState()){
                 case Success:
-                    return new QueryStatus.Success<>(new ChatRoom(input.getData()));
+                    return new QueryStatus.Success<>(input.getData() != null ? new ChatRoom(input.getData()) : null);
                 case Error:
                     return new QueryStatus.Error<>(input.getMessage());
                 case Loading:

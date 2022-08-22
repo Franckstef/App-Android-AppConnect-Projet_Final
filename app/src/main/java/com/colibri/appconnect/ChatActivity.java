@@ -14,7 +14,6 @@ import com.colibri.appconnect.data.repository;
 import com.colibri.appconnect.databinding.ActivityChatBinding;
 import com.colibri.appconnect.util.QueryStatus;
 
-import java.util.List;
 import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
@@ -56,7 +55,6 @@ public class ChatActivity extends AppCompatActivity {
                                 ,()->{
                             setAdapter(buildChatChannel(getIntent().getStringExtra(USERTO)));
                         });
-
                     }
                     else{
                         room.sendMessage(new MessageDoc(binding.etChatMessage.getText().toString(), "userToId"), null);
@@ -64,7 +62,6 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 }
             });
-
         });
     }
 
@@ -83,20 +80,10 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void checkIfExistChatRoom() {
-        LiveData<QueryStatus<List<ChatRoom>>> chatRoomList = repository.getInstance().getChatroomList();
-        chatRoomList.observe(this, chatRoomListQueryStatus -> {
-            if (chatRoomListQueryStatus.isSuccessful()){
-                String chatRoomId = buildChatChannel(getIntent().getStringExtra(USERTO));
-                for(ChatRoom data : chatRoomListQueryStatus.getData()){
-                    if (data.getName().contains(chatRoomId)){
-                        Log.e(TAG, data.getName());
-                        setAdapter(buildChatChannel(getIntent().getStringExtra(USERTO)));
-                        break;
-                    }
-                }
-            }
-            else if(chatRoomListQueryStatus.isFailed()){
-                Log.d(TAG, "checkIfExistChatRoom: chat failed");
+        String chatRoomId = buildChatChannel(getIntent().getStringExtra(USERTO));
+        repository.getInstance().getChatroom(chatRoomId).observe(this, chatRoom ->{
+            if(chatRoom.getData() != null && chatRoom.isSuccessful()){
+                setAdapter(buildChatChannel(getIntent().getStringExtra(USERTO)));
             }
         });
     }
@@ -105,8 +92,8 @@ public class ChatActivity extends AppCompatActivity {
 
         String chatChannel = "";
 
-        //String user = repository.getInstance().getCurrentUser().getValue().getData().getId();
-         String user = "9D1GRUQrxhaZlPGI15N1UVQ1WyB2";
+
+        String user = "9D1GRUQrxhaZlPGI15N1UVQ1WyB2";
         int result = userTo.compareTo(user);
 
         if(result < 0){
