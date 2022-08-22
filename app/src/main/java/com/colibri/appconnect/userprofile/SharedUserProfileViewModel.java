@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.colibri.appconnect.R;
-import com.colibri.appconnect.StartChatAction;
+import com.colibri.appconnect.ProfileAction;
 import com.colibri.appconnect.data.entity.User;
 import com.colibri.appconnect.data.repository;
 import com.colibri.appconnect.util.QueryStatus;
@@ -26,10 +26,12 @@ public class SharedUserProfileViewModel extends ViewModel {
     private final ActionButtonAdapter adapter = new ActionButtonAdapter();
 
     private final String placeholderRepo;
-    private View.OnClickListener phoneClickListener = null;
-    private View.OnClickListener emailClickListener = null;
     private View.OnClickListener signOutClickListener = null;
-    private StartChatAction chatClickAction = null;
+
+    private ProfileAction phoneClickListener = null;
+    private ProfileAction emailClickListener = null;
+
+    private ProfileAction chatClickAction = null;
     private final repository repo = repository.getInstance();
     private final LiveData<QueryStatus<User>> userQuery;
     private final LiveData<Boolean> isLoading;
@@ -78,20 +80,20 @@ public class SharedUserProfileViewModel extends ViewModel {
         return userProfile;
     }
 
-    public void setPhoneClickListener(View.OnClickListener listener){
-        phoneClickListener = listener;
+    public void setPhoneClickListener(ProfileAction profileAction){
+        phoneClickListener = profileAction;
     }
 
-    public void setEmailClickListener(View.OnClickListener emailClickListener) {
-        this.emailClickListener = emailClickListener;
+    public void setEmailClickListener(ProfileAction profileAction) {
+        emailClickListener = profileAction;
     }
 
     public void setSignOutClickListener(View.OnClickListener signOutClickListener) {
         this.signOutClickListener = signOutClickListener;
     }
 
-    public void setChatClickAction(StartChatAction chatClickAction) {
-        this.chatClickAction = chatClickAction;
+    public void setChatAction(ProfileAction profileAction) {
+        chatClickAction = profileAction;
     }
 
     private List<ActionButtonBinding> getActionButtons(User user){
@@ -137,27 +139,31 @@ public class SharedUserProfileViewModel extends ViewModel {
         ActionButtonBinding chatButton = new ActionButtonBinding(R.drawable.ic_message, "Envoyer un message");
 
         chatButton.setOnClickListener(view -> {
-            chatClickAction.startChatWith(user.getId());
+            chatClickAction.execute(user.getId());
         });
         chatButton.setIsHighlighted(true);
         return chatButton;
     }
     
     private ActionButtonBinding getPhoneActionButton(User user){
+        String primaryPhone = user.getPrimaryPhone();
         return getContactActionButton(
                 R.drawable.ic_phone,
-                user.getPrimaryPhone(),
+                primaryPhone,
                 user,
-                phoneClickListener
+                phoneClickListener,
+                primaryPhone
         );
     }
 
     private ActionButtonBinding getEmailActionButton(User user){
+        String primaryEmail = user.getPrimaryEmail();
         return getContactActionButton(
                 R.drawable.ic_email,
-                user.getPrimaryEmail(),
+                primaryEmail,
                 user,
-                emailClickListener
+                emailClickListener,
+                primaryEmail
         );
     }
 
@@ -165,16 +171,19 @@ public class SharedUserProfileViewModel extends ViewModel {
             @DrawableRes int icon,
             String label,
             User user,
-            View.OnClickListener lister)
+            ProfileAction action,
+            String actionParameter)
     {
         if(label == null) {
             return null;
         }
 
         ActionButtonBinding abb = new ActionButtonBinding(icon, label);
-        if (lister != null && !user.getIsCurrentUser()) {
+        if (action != null && !user.getIsCurrentUser()) {
             abb.setIsHighlighted(true);
-            abb.setOnClickListener(lister);
+            abb.setOnClickListener(view -> {
+                action.execute(actionParameter);
+            });
         }
         return abb;
     }

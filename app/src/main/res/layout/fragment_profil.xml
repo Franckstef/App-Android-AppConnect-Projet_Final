@@ -15,9 +15,9 @@
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
 
-        android:background="#E2E2E2" android:layout_height="match_parent" android:layout_width="match_parent">
-
-
+        android:background="@drawable/abstractback3"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
         <include
             android:id="@+id/include"

@@ -1,6 +1,7 @@
 package com.colibri.appconnect.userprofile;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,7 +68,7 @@ public class ProfilFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Profil");
+        ((HomeActivity) requireActivity()).getSupportActionBar().setTitle("Profil");
         // Inflate the layout for this fragment
         FragmentProfilBinding binding = DataBindingUtil.inflate(
                 inflater,
@@ -76,17 +77,29 @@ public class ProfilFragment extends Fragment {
                 false
         );
 
-        viewModel.setPhoneClickListener(v->{});
         viewModel.setSignOutClickListener(v->{});
-        viewModel.setEmailClickListener(v->{});
-        viewModel.setChatClickAction(userId1 -> {
+
+        viewModel.setPhoneClickListener(phoneNumber->{
+            final Uri phoneUri = Uri.parse("tel:" + phoneNumber);
+            Intent intent = new Intent(Intent.ACTION_DIAL, phoneUri);
+            startActivity(intent);
+        });
+
+        viewModel.setEmailClickListener(email->{
+            final Uri emailUri = Uri.parse("mailto:" + email);
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+            emailIntent.setData(emailUri);
+            startActivity(Intent.createChooser(emailIntent, "Envoyer un courriel"));
+        });
+        viewModel.setChatAction(OtherUserId -> {
             Intent intent = new Intent(container.getContext(), ChatActivity.class);
-            intent.putExtra(ChatActivity.USERTO, userId1);
+            intent.putExtra(ChatActivity.USERTO, OtherUserId);
             startActivity(intent);
         });
         binding.setLifecycleOwner(this);
         binding.setViewModel(viewModel);
 
         return binding.getRoot();
+
     }
 }
