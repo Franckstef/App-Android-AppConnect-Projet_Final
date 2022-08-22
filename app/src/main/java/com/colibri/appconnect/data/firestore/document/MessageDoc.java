@@ -1,19 +1,15 @@
 package com.colibri.appconnect.data.firestore.document;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.colibri.appconnect.data.entity.User;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentReference;
 
 import java.util.Objects;
 
 public class MessageDoc extends FirestoreDocument{
     private String textMessage;
-    private String userToId;
+    private String userFromId;
     private Timestamp timestamp = Timestamp.now();
 
 //    public DocumentReference getSender() {
@@ -24,17 +20,17 @@ public class MessageDoc extends FirestoreDocument{
 
     MessageDoc(){super();}
 
-    public MessageDoc(String textMessage, String userToId) {
+    public MessageDoc(String textMessage, String userFromId) {
         this.textMessage = textMessage;
-        this.userToId = userToId;
+        this.userFromId = userFromId;
     }
 
-    public String getUserToId() {
-        return userToId;
+    public String getUserFromId() {
+        return userFromId;
     }
 
-    public MessageDoc setUserToId(String userToId) {
-        this.userToId = userToId;
+    public MessageDoc setUserFromId(String userFromId) {
+        this.userFromId = userFromId;
         return this;
     }
 

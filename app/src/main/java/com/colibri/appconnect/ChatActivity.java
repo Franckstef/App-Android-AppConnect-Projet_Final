@@ -52,10 +52,11 @@ public class ChatActivity extends AppCompatActivity {
                     });
                 }
                 else{
+                    String userFromId = FirebaseAuth.getInstance().getUid();
                     repository.getInstance().getChatroom(buildChatChannel(getIntent().getStringExtra(USERTO))).observe(this, test -> {
                         if(test.isSuccessful()){
                             test.getData()
-                                    .sendMessage(new MessageDoc(binding.etChatMessage.getText().toString(), "userToId"), null);
+                                    .sendMessage(new MessageDoc(binding.etChatMessage.getText().toString(), userFromId), null);
                         }
                     });
 

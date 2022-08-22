@@ -6,17 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.colibri.appconnect.contactList.ContactClickListener;
-import com.colibri.appconnect.data.entity.User;
 import com.colibri.appconnect.data.firestore.document.MessageDoc;
 import com.colibri.appconnect.databinding.MessageItemBinding;
-import com.colibri.appconnect.databinding.UserItemBinding;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -51,9 +49,11 @@ public class ChatRoomListAdapter extends ListAdapter<MessageDoc, ChatRoomListAda
             binding = MessageItemBinding.bind(itemView);
         }
         void bind(MessageDoc abb){
-            if (Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid().equals(abb.getUserToId())) {
+            if (Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid().equals(abb.getUserFromId())) {
                 isFromMe = true;
             }
+            Date javaDate = abb.getTimestamp().toDate();
+            binding.setDate(javaDate.toString());
             binding.setIsFromMe(isFromMe);
             binding.setMessageDoc(abb);
 

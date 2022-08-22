@@ -6,6 +6,9 @@
     <data>
         <import type="android.view.View"/>
         <variable
+            name="date"
+            type="String" />
+        <variable
             name="messageDoc"
             type="com.colibri.appconnect.data.firestore.document.MessageDoc" />
         <variable
@@ -14,6 +17,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/chatLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -28,7 +32,7 @@
             android:paddingTop="4dp"
             android:paddingEnd="8dp"
             android:paddingBottom="4dp"
-            android:text="19 août, 17h46"
+            android:text="@{date}"
             android:textColor="#A1887F"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -64,6 +68,8 @@
             app:cardUseCompatPadding="true"
             app:layout_constraintStart_toEndOf="@+id/profile_image"
             app:layout_constraintTop_toBottomOf="@+id/textdate">
+<!--            app:layout_constraintStart_toEndOf='@{isFromMe ? @id/profile_image : null}'-->
+
 
             <LinearLayout
                 android:id="@+id/layout_container"
