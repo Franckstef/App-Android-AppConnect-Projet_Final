@@ -67,7 +67,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.lieux.setText(myListData.getLieux());
 
         holder.cardView.setOnClickListener(v -> {
-            onClick.onItemClick(myListData);
+            if (onClick != null) {
+                onClick.onItemClick(myListData);
+            }
+
             //Toast.makeText(v.getContext(),"click on item: " + myListData.getTitre(),Toast.LENGTH_LONG).show();
         });
 
