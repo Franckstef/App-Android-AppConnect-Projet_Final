@@ -13,6 +13,8 @@ import com.colibri.appconnect.data.firestore.document.MessageDoc;
 import com.colibri.appconnect.data.repository;
 import com.colibri.appconnect.databinding.ActivityChatBinding;
 import com.colibri.appconnect.util.QueryStatus;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
@@ -23,7 +25,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private boolean exist = false;
     private ActivityChatBinding binding;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +94,9 @@ public class ChatActivity extends AppCompatActivity {
 
         String chatChannel = "";
 
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        String user = "9D1GRUQrxhaZlPGI15N1UVQ1WyB2";
+        Log.d(TAG, "buildChatChannel: " +user);
         int result = userTo.compareTo(user);
 
         if(result < 0){
