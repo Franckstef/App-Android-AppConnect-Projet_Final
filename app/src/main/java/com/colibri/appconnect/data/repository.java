@@ -90,8 +90,6 @@ public class repository {
     }
 
     public LiveData<QueryStatus<List<ChatRoom>>> getChatroomList(){
-        //String userId = "asd";
-//        getChatsCollection().whereArrayContains("users", userId);
         LiveData<QueryStatus<List<ChatDoc>>> queryChatList = CollectionTo.liveData(getChatsCollection().get(), ChatDoc.class);
         return Transformations.map(queryChatList, input -> {
                     switch (input.getState()){
