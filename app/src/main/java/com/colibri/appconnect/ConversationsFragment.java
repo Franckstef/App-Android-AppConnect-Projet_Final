@@ -30,7 +30,7 @@ public class ConversationsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Message");
+        ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Messages");
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_conversations, container, false);
         OnItemClickListener listener = position -> {
             Intent intent = new Intent(container.getContext(), ChatActivity.class);

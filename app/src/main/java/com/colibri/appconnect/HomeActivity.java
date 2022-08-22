@@ -157,9 +157,9 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnBu
                 case R.id.navigation_chat:
                     frag = new ConversationsFragment();
                     break;
-                case R.id.navigation_forum:
+                /*case R.id.navigation_forum:
                     frag = new ForumFragment();
-                    break;
+                    break;*/
                 case R.id.navigation_menu:
                     frag = new MenuFragment();
                     break;

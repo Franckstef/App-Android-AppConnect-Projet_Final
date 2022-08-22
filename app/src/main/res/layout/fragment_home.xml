@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomeFragment"
-    android:background="@android:color/transparent">
+    android:background="@drawable/abstractback3">
 
     <TextView
         android:id="@+id/textView"
