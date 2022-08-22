@@ -40,7 +40,7 @@ public class MenuFragment extends Fragment {
         list.add(new MenuItem("Formulaires", R.drawable.ic_document));
         list.add(new MenuItem("Evenements", R.drawable.ic_event));
         list.add(new MenuItem("Réglages", R.drawable.ic_settings));
-        list.add(new MenuItem("FAQ", R.drawable.ic_question));
+        list.add(new MenuItem("Suggestions", R.drawable.ic_question));
 
         MenuItemAdapter adapter = new MenuItemAdapter(getContext(), list);
         menu.setAdapter(adapter);
@@ -48,12 +48,16 @@ public class MenuFragment extends Fragment {
         menu.setOnItemClickListener((parent, view, position, id) -> {
             switch (position) {
                 case 0:
-                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    Intent intent = new Intent(getContext(), HistoireActivity.class);
                     startActivity(intent);
                     break;
                 case 1:
-                    Intent intent4 = new Intent(getContext(), RessourcesActivity.class);
-                    startActivity(intent4);
+                    Intent intent1 = new Intent(getContext(), RessourcesActivity.class);
+                    startActivity(intent1);
+                    break;
+                case 3:
+                    Intent intent3 = new Intent(getContext(), EvenementsActivity.class);
+                    startActivity(intent3);
                     break;
                 default:
                     break;
