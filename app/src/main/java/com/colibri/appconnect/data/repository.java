@@ -79,7 +79,7 @@ public class repository {
                         .collection("messages")
                         .add(messageDoc).addOnCompleteListener(newMessageDocTask ->{
                             if(newMessageDocTask.isSuccessful()){
-                                Log.d(TAG, "addChatroom: " + chatDoc.getName());
+                                Log.e(TAG, "addChatroom: " + chatDoc.getName());
                                 onNewChatRoom.onSuccess();
                             }
 

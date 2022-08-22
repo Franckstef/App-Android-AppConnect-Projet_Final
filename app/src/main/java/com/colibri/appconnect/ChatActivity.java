@@ -18,10 +18,8 @@ import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
 
-    //public static final String CHATROOMID = "4O4t9hpFwDRyonsEGO4JJo8pfZI3_9D1GRUQrxhaZlPGI15N1UVQ1WyB2";
     public static final String USERTO = "userTo";
     private static final String TAG = "ChatActivity";
-   // private final String USERID = "9D1GRUQrxhaZlPGI15N1UVQ1WyB2";
 
     private boolean exist = false;
     private ActivityChatBinding binding;
@@ -45,24 +43,27 @@ public class ChatActivity extends AppCompatActivity {
         checkIfExistChatRoom();
 
         binding.btnChatSend.setOnClickListener(v -> {
-            LiveData<QueryStatus<ChatRoom>> chatroom = repository.getInstance().getChatroom(buildChatChannel(getIntent().getStringExtra(USERTO)));
-            chatroom.observe(this, chatRoomQueryStatus -> {
-                if (chatRoomQueryStatus.isSuccessful()) {
-                    ChatRoom room = chatRoomQueryStatus.getData();
-                    if(!exist){
-                        repository.getInstance().addChatroom(new ChatDoc(buildChatChannel(getIntent().getStringExtra(USERTO))),
-                                new MessageDoc(binding.etChatMessage.getText().toString(), "userToId")
-                                ,()->{
-                            setAdapter(buildChatChannel(getIntent().getStringExtra(USERTO)));
-                        });
-                    }
-                    else{
-                        room.sendMessage(new MessageDoc(binding.etChatMessage.getText().toString(), "userToId"), null);
-                        Log.e(TAG, "onCreate: else" );
-                    }
+                if(!exist){
+                    repository.getInstance().addChatroom(new ChatDoc(buildChatChannel(getIntent().getStringExtra(USERTO))),
+                            new MessageDoc(binding.etChatMessage.getText().toString(), "userToId")
+                            ,()->{
+                        setAdapter(buildChatChannel(getIntent().getStringExtra(USERTO)));
+                    });
                 }
+                else{
+                    repository.getInstance().getChatroom(buildChatChannel(getIntent().getStringExtra(USERTO))).observe(this, test -> {
+                        if(test.isSuccessful()){
+                            test.getData()
+                                    .sendMessage(new MessageDoc(binding.etChatMessage.getText().toString(), "userToId"), null);
+                        }
+                    });
+
+
+                    Log.e(TAG, "onCreate: else" );
+                }
+
             });
-        });
+
     }
 
     private void setAdapter(String chatRoomid) {
