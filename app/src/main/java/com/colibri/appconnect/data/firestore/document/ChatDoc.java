@@ -16,6 +16,10 @@ public class ChatDoc extends FirestoreDocument {
     private String name;
 
     ChatDoc(){ super();}
+    public ChatDoc(String name) {
+        super();
+        this.name = name;
+    }
 
     public String getName() {
         return name;
