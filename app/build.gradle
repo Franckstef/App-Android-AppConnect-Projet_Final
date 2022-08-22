@@ -48,10 +48,12 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
     implementation "com.squareup.picasso:picasso:$picassoVersion"
     implementation "com.github.javafaker:javafaker:$javafakerVersion"
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation "com.firebaseui:firebase-ui-auth:$firebaseUiAuthVersion"
+
     //Lifecycle Aware
     
 

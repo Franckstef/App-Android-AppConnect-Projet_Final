@@ -18,6 +18,12 @@
         android:theme="@style/Theme.AppConnect"
         tools:targetApi="32">
         <activity
+            android:name=".HistoireActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EvenementsActivity"
+            android:exported="false" />
+        <activity
             android:name=".RessourcesActivity"
             android:exported="false" />
         <activity
@@ -37,7 +43,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
 
 </manifest>
