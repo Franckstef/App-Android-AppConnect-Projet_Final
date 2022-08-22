@@ -1,7 +1,10 @@
 package com.colibri.appconnect;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +32,7 @@ public class MenuFragment extends Fragment {
         ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Menu");
         view = inflater.inflate(R.layout.fragment_menu, container, false);
         GridView menu = view.findViewById(R.id.gridMenu);
+
 
         ArrayList<MenuItem> list = new ArrayList<>();
         list.add(new MenuItem("Histoire", R.drawable.ic_histoire));
