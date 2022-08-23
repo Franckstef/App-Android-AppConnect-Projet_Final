@@ -72,6 +72,7 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
     private void OnUserUpdate(QueryStatus<User> userQueryStatus){
         switch (userQueryStatus.getState()){
             case Success:
+                final String displayName = userQueryStatus.getData().getDisplayName();
                 break;
             case Error:
                 break;
