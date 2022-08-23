@@ -3,25 +3,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.colibri.appconnect.data.firestore.firestorelive.util.FirestoreLiveUtil;
+import com.colibri.appconnect.data.entity.User;
 import com.colibri.appconnect.data.repository;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.colibri.appconnect.util.QueryStatus;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClicked {
+
+    private final repository repo = repository.getInstance();
+    private final LiveData<QueryStatus<User>> currentUser = repo.getCurrentUser();
+    private final LiveData<QueryStatus<List<News>>> newsFeed = repo.getNewsFeed();
+    private RecyclerView recyclerView;
+
 
     public HomeFragment() {}
 
@@ -52,23 +58,36 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getContext(), images);
         viewPager.setAdapter(viewPagerAdapter);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(homeActivity));
 
-        repository.getInstance().getNewsFeed().observe(getViewLifecycleOwner(), listQueryStatus -> {
-            if(listQueryStatus.isSuccessful()){
-                ArrayList<News> list= new ArrayList(listQueryStatus.getData());
-
-                NewsFeedAdapter adapter = new NewsFeedAdapter(list, homeActivity);
-                recyclerView.setAdapter(adapter);
-                adapter.setOnClick(this);
-            }
-        });
-
+        newsFeed.observe(getViewLifecycleOwner(), this::OnNewsFeedUpdate);
+        currentUser.observe(getViewLifecycleOwner(),this::OnUserUpdate);
 
         init();
 
         return view;
+    }
+
+    private void OnUserUpdate(QueryStatus<User> userQueryStatus){
+        switch (userQueryStatus.getState()){
+            case Success:
+                final String displayName = userQueryStatus.getData().getDisplayName();
+                break;
+            case Error:
+                break;
+            case Loading:
+                break;
+        }
+    }
+    private void OnNewsFeedUpdate(QueryStatus<List<News>> listQueryStatus){
+        if(listQueryStatus.isSuccessful()){
+            ArrayList<News> list= new ArrayList<>(listQueryStatus.getData());
+
+            NewsFeedAdapter adapter = new NewsFeedAdapter(list, homeActivity);
+            recyclerView.setAdapter(adapter);
+            adapter.setOnClick(this);
+        }
     }
 
     @Override
