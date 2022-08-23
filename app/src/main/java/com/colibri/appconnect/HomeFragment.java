@@ -26,6 +26,8 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
     private final repository repo = repository.getInstance();
     private final LiveData<QueryStatus<User>> currentUser = repo.getCurrentUser();
     private final LiveData<QueryStatus<List<News>>> newsFeed = repo.getNewsFeed();
+    private RecyclerView recyclerView;
+
 
     public HomeFragment() {}
 
@@ -56,23 +58,35 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getContext(), images);
         viewPager.setAdapter(viewPagerAdapter);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(homeActivity));
-        
-        newsFeed.observe(getViewLifecycleOwner(), listQueryStatus -> {
-            if(listQueryStatus.isSuccessful()){
-                ArrayList<News> list= new ArrayList(listQueryStatus.getData());
 
-                NewsFeedAdapter adapter = new NewsFeedAdapter(list, homeActivity);
-                recyclerView.setAdapter(adapter);
-                adapter.setOnClick(this);
-            }
-        });
-
+        newsFeed.observe(getViewLifecycleOwner(), this::OnNewsFeedUpdate);
+        currentUser.observe(getViewLifecycleOwner(),this::OnUserUpdate);
 
         init();
 
         return view;
+    }
+
+    private void OnUserUpdate(QueryStatus<User> userQueryStatus){
+        switch (userQueryStatus.getState()){
+            case Success:
+                break;
+            case Error:
+                break;
+            case Loading:
+                break;
+        }
+    }
+    private void OnNewsFeedUpdate(QueryStatus<List<News>> listQueryStatus){
+        if(listQueryStatus.isSuccessful()){
+            ArrayList<News> list= new ArrayList<>(listQueryStatus.getData());
+
+            NewsFeedAdapter adapter = new NewsFeedAdapter(list, homeActivity);
+            recyclerView.setAdapter(adapter);
+            adapter.setOnClick(this);
+        }
     }
 
     @Override
