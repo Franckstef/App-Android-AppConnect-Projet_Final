@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.colibri.appconnect.data.entity.User;
 import com.colibri.appconnect.data.repository;
@@ -27,7 +28,7 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
     private final LiveData<QueryStatus<User>> currentUser = repo.getCurrentUser();
     private final LiveData<QueryStatus<List<News>>> newsFeed = repo.getNewsFeed();
     private RecyclerView recyclerView;
-
+    private TextView name;
 
     public HomeFragment() {}
 
@@ -58,6 +59,8 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getContext(), images);
         viewPager.setAdapter(viewPagerAdapter);
 
+        name = view.findViewById(R.id.textView);
+
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(homeActivity));
 
@@ -73,6 +76,7 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
         switch (userQueryStatus.getState()){
             case Success:
                 final String displayName = userQueryStatus.getData().getDisplayName();
+                name.setText("Bonjour,  " + displayName + "\n Prêt à construire l'avenir?");
                 break;
             case Error:
                 break;
