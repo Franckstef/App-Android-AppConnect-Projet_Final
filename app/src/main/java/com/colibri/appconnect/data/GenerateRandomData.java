@@ -9,43 +9,95 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GenerateRandomData {
-    public static UserDoc fakeUser(FirebaseUser user){
-        Faker faker = new Faker();
-        String name = user.getDisplayName();
-        if(name == null ||name.isEmpty()){
-            name = faker.name().name();
-        }
+    static Faker faker = new Faker();
 
-        String email = user.getEmail();
-        if(email == null ||email.isEmpty()){
-            email = faker.internet().safeEmailAddress();
-        }
+    public static String getFakeName(){
+        return getFakeName(null);
+    }
 
-        String avatar;
-        if(user.getPhotoUrl() != null) {
-            avatar = user.getPhotoUrl().toString();
-        } else {
-            avatar = "https://i.pravatar.cc/150?u="+user.getUid();
+    public static String getFakeName(FirebaseUser user){
+        if (user != null) {
+            String name = user.getDisplayName();
+            if(name != null && !name.isEmpty()){
+                return name;
+            }
         }
+        return faker.name().name();
+    }
 
-        String phone = user.getPhoneNumber();
-        if(phone == null || phone.isEmpty()){
-            phone = faker.phoneNumber().phoneNumber();
+    public static String getFakeAvatar(){
+        return getFakeName(null);
+    }
+
+    public static String getFakeAvatar(FirebaseUser user){
+        if (user != null) {
+            if(user.getPhotoUrl() != null){
+                return user.getPhotoUrl().toString();
+            }else {
+                return "https://i.pravatar.cc/150?u="+user.getUid();
+            }
         }
+        int randomNum = ThreadLocalRandom.current().nextInt(1, 9999999);
+        return "https://i.pravatar.cc/150?u=" + randomNum;
+    }
 
-        UserDoc userDoc = new UserDoc(
-                name,
-                avatar,
-                new UserDocInfoPersonal(
-                        email,
-                        phone
-                ),
-                new UserDocInfoHr(
-                        ThreadLocalRandom.current().nextInt(1111, 9999),
-                        faker.job().title(),
-                        faker.country().capital()
-                )
+    public static String getFakeEmail(){
+        return getFakeEmail(null);
+    }
+
+    public static String getFakeEmail(FirebaseUser user){
+        if (user != null) {
+            String email = user.getEmail();
+            if(email != null && !email.isEmpty()){
+                return email;
+            }
+        }
+        return faker.internet().safeEmailAddress();
+    }
+
+    public static String getFakePhone(){
+        return getFakeEmail(null);
+    }
+
+    public static String getFakePhone(FirebaseUser user){
+        if (user != null) {
+            String phone = user.getPhoneNumber();
+            if(phone != null && !phone.isEmpty()){
+                return phone;
+            }
+        }
+        return faker.phoneNumber().phoneNumber();
+    }
+
+    public static UserDocInfoHr getFakeHrInfo(){
+        return new UserDocInfoHr(
+                ThreadLocalRandom.current().nextInt(1111, 9999),
+                faker.job().title(),
+                faker.country().capital()
         );
-        return userDoc;
+    }
+
+    public static UserDocInfoPersonal getFakeInfoPersonal(){
+        return getFakeInfoPersonal(null);
+    }
+
+    public static UserDocInfoPersonal getFakeInfoPersonal(FirebaseUser user){
+        return new UserDocInfoPersonal(
+                getFakeEmail(user),
+                getFakePhone(user)
+        );
+    }
+
+    public static UserDoc fakeUser(){
+        return fakeUser(null);
+    }
+
+    public static UserDoc fakeUser(FirebaseUser user){
+        return new UserDoc(
+                getFakeName(user),
+                getFakeAvatar(user),
+                getFakeInfoPersonal(user),
+                getFakeHrInfo()
+        );
     }
 }

@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Objects;
 
@@ -19,6 +21,16 @@ public class MessageDoc extends FirestoreDocument{
 //    private DocumentReference sender;
 
     MessageDoc(){super();}
+    MessageDoc(DocumentSnapshot snapshot){
+        super(snapshot);
+        if(snapshot.exists()){
+            final MessageDoc toObject = snapshot.toObject(MessageDoc.class);
+            this.textMessage = toObject.getTextMessage();
+            this.timestamp = toObject.getTimestamp();
+        } else {
+            textMessage = "Message generated on Empty document";
+        }
+    }
 
     public MessageDoc(String textMessage, String userFromId) {
         this.textMessage = textMessage;

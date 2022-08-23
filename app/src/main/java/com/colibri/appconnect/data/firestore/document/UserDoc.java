@@ -1,6 +1,9 @@
 package com.colibri.appconnect.data.firestore.document;
 
+import com.colibri.appconnect.data.GenerateRandomData;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.PropertyName;
 
 import java.util.Objects;
@@ -15,6 +18,27 @@ public class UserDoc extends FirestoreDocument{
     private Timestamp lastConnection;
 
     UserDoc(){}
+
+
+    UserDoc(DocumentSnapshot snapshot) {
+        super(snapshot);
+        if(snapshot.exists()){
+            final UserDoc other = snapshot.toObject(UserDoc.class);
+            this.displayName = other.getDisplayName();
+            this.avatar = other.getAvatar();
+            this.infoPersonal = other.getInfoPersonal();
+            this.infoHr = other.getInfoHr();
+            this.createdOn = other.getCreatedOn();
+            this.lastConnection = other.getLastConnection();
+        } else {
+            this.displayName = GenerateRandomData.getFakeName();
+            this.avatar = GenerateRandomData.getFakeAvatar();
+            this.infoPersonal = GenerateRandomData.getFakeInfoPersonal();
+            this.infoHr = GenerateRandomData.getFakeHrInfo();
+            this.createdOn = Timestamp.now();
+            this.lastConnection = Timestamp.now();
+        }
+    }
 
     public UserDoc(String displayName, String avatar, UserDocInfoPersonal infoPersonal, UserDocInfoHr infoHr) {
         this.displayName = displayName;

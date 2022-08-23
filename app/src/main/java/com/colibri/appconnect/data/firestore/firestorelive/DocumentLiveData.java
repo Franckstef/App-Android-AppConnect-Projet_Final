@@ -12,7 +12,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.ListenerRegistration;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 class DocumentLiveDataNative<T> extends LiveData<QueryStatus<T>> {
+    private static final String TAG = "AP::DocLiveDataNative";
     private final DocumentReference documentReference;
     private final Class<T> aClass;
 
@@ -30,15 +34,35 @@ class DocumentLiveDataNative<T> extends LiveData<QueryStatus<T>> {
         listener = documentReference.addSnapshotListener((documentSnapshot, exception) -> {
             if (exception == null) {
                 if (documentSnapshot != null) {
-                    setValue(new QueryStatus.Success<>(
-                            FirestoreLiveUtil.DocumentToPojo(documentSnapshot, aClass)
-                    ));
+                    final T pojo = FirestoreLiveUtil.DocumentToPojo(documentSnapshot, aClass);
+                    if (pojo == null) {
+                        if(FirestoreDocument.class.isAssignableFrom(aClass)){
+                            try {
+                                final Constructor<? extends T> ctor = aClass.getConstructor(DocumentSnapshot.class);
+                                Log.d(TAG, "onActive: Found Ctor");
+                                final T newInstance = ctor.newInstance(documentSnapshot);
+                                setValue(new QueryStatus.Error<>("No Document Found, but is FirestoreDoc",newInstance));
+                            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                                setValue(new QueryStatus.Error<>(e.getMessage()));
+                            }
+
+                        } else {
+                            setValue(new QueryStatus.Error<>("No Document Found"));
+                        }
+                    } else {
+                        setValue(new QueryStatus.Success<>(
+                                pojo
+                        ));
+                    }
+                } else {
+                    setValue(new QueryStatus.Error<>("No Document snapshot"));
                 }
             } else {
                 Log.e("FireStoreLiveData", "", exception);
                 setValue(new QueryStatus.Error<>(exception));
             }
         });
+
     }
 
     @Override
@@ -69,7 +93,15 @@ class DocumentLiveDataCustom<T> extends LiveData<QueryStatus<T>> {
         setValue(new QueryStatus.Loading<>());
         listener = documentReference.addSnapshotListener((documentSnapshot, exception) -> {
             if (exception == null) {
-                setValue(new QueryStatus.Success<>(parser.parse(documentSnapshot)));
+                final T parsed = parser.parse(documentSnapshot);
+
+                if (parsed == null) {
+                    setValue(new QueryStatus.Error<>("No Document Found"));
+                } else {
+                    setValue(new QueryStatus.Success<>(
+                            parsed
+                    ));
+                }
             } else {
                 Log.e("FireStoreLiveData", "", exception);
                 setValue(new QueryStatus.Error<>(exception));

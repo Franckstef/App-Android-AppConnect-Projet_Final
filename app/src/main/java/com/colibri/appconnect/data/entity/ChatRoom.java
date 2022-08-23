@@ -57,7 +57,11 @@ public class ChatRoom {
 
     @Override
     public String toString() {
-        return super.toString();
+        if (document != null)
+            return document.toString();
+        else{
+            return "Null Document";
+        }
     }
 
     private static final String TAG = "AP::ChatRoom";

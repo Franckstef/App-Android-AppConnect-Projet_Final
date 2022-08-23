@@ -19,8 +19,9 @@ public class FirestoreLiveUtil {
 
     public static <T>  T DocumentToPojo(DocumentSnapshot querySnapshot, Class<T> tClass){
         T pojoObj = querySnapshot.toObject(tClass);
+
         if(pojoObj instanceof FirestoreDocument){
-            ((FirestoreDocument) pojoObj).setDocumentReference(querySnapshot.getReference());
+            ((FirestoreDocument) pojoObj).linkToSnapshot(querySnapshot);
         }
         return pojoObj;
     }

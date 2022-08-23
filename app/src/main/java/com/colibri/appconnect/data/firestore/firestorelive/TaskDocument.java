@@ -24,9 +24,14 @@ class TaskDocumentLiveDataNative<T> extends LiveData<QueryStatus<T>> {
         task.addOnCompleteListener(taskComplete -> {
             if (taskComplete.isSuccessful()) {
                 DocumentSnapshot documentSnapshot = taskComplete.getResult();
-                setValue(new QueryStatus.Success<>(
-                        FirestoreLiveUtil.DocumentToPojo(documentSnapshot, aClass)
-                ));
+                final T pojo = FirestoreLiveUtil.DocumentToPojo(documentSnapshot, aClass);
+                if (pojo == null) {
+                    setValue(new QueryStatus.Error<>("No Document Found"));
+                } else {
+                    setValue(new QueryStatus.Success<>(
+                            pojo
+                    ));
+                }
             } else {
                 Throwable taskCompleteException = taskComplete.getException();
                 Log.e("FireStoreLiveData", "", taskCompleteException);
@@ -51,7 +56,15 @@ class TaskDocumentLiveDataCustom<T> extends LiveData<QueryStatus<T>> {
         task.addOnCompleteListener(taskComplete -> {
             if (taskComplete.isSuccessful()) {
                 DocumentSnapshot documentSnapshot = taskComplete.getResult();
-                setValue(new QueryStatus.Success<>(parser.parse(documentSnapshot)));
+                final T parsed = parser.parse(documentSnapshot);
+
+                if (parsed == null) {
+                    setValue(new QueryStatus.Error<>("No Document Found"));
+                } else {
+                    setValue(new QueryStatus.Success<>(
+                            parsed
+                    ));
+                }
             } else {
                 Throwable taskCompleteException = taskComplete.getException();
                 Log.e("FireStoreLiveData", "", taskCompleteException);

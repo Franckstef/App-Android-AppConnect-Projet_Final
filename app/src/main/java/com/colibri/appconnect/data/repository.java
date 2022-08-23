@@ -57,6 +57,7 @@ public class repository {
     public LiveData<QueryStatus<ChatRoom>> getChatroom(String chatroomId){
         LiveData<QueryStatus<ChatDoc>> queryChatDoc = DocumentTo.liveData(getChatsCollection().document(chatroomId), ChatDoc.class);
         return Transformations.map(queryChatDoc, input -> {
+            Log.d(TAG, "getChatroom: " + input);
             switch (input.getState()){
                 case Success:
                     return new QueryStatus.Success<>(input.getData() != null ? new ChatRoom(input.getData()) : null);
