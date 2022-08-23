@@ -3,25 +3,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.colibri.appconnect.data.firestore.firestorelive.util.FirestoreLiveUtil;
+import com.colibri.appconnect.data.entity.User;
 import com.colibri.appconnect.data.repository;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.colibri.appconnect.util.QueryStatus;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClicked {
+
+    private final repository repo = repository.getInstance();
+    private final LiveData<QueryStatus<User>> currentUser = repo.getCurrentUser();
+    private final LiveData<QueryStatus<List<News>>> newsFeed = repo.getNewsFeed();
 
     public HomeFragment() {}
 
@@ -54,8 +58,8 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(homeActivity));
-
-        repository.getInstance().getNewsFeed().observe(getViewLifecycleOwner(), listQueryStatus -> {
+        
+        newsFeed.observe(getViewLifecycleOwner(), listQueryStatus -> {
             if(listQueryStatus.isSuccessful()){
                 ArrayList<News> list= new ArrayList(listQueryStatus.getData());
 
