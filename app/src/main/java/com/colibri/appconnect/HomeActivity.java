@@ -30,6 +30,7 @@ import com.colibri.appconnect.userprofile.ProfileActivity;
 import com.colibri.appconnect.util.QueryStates;
 import com.colibri.appconnect.util.QueryStatus;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.Timestamp;
 
 import java.util.List;
 
@@ -40,8 +41,17 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnBu
     Authenticator authenticator;
 
     private void TestChatRoom(){
-
-        repo.getChatroomList().observe(this, this::onListChatQueryChanged);
+        String cr = "safsef";
+        repo.getChatroom(cr).observe(this,rep->{
+            Log.d(TAG, "TestChatRoom: " + rep);
+            final ChatRoom data = rep.getData();
+            if (data != null) {
+                data.setName(Timestamp.now().toString());
+                data.pushToFirebase().observe(this, val->{
+                    Log.d(TAG, "TestChatRoom: " + val);
+                });
+            }
+        });
     }
 
     private void onListChatQueryChanged(QueryStatus<List<ChatRoom>> listQueryStatus) {

@@ -23,14 +23,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="@{isUserConnected?View.GONE:View.VISIBLE}"
-            tools:visibility="visible"
+            tools:visibility="gone"
             />
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical"
     android:visibility="@{isUserConnected?View.VISIBLE:View.GONE}"
-    tools:visibility="gone"
+    tools:visibility="visible"
     android:background="@drawable/abstractback3">
 
     <androidx.appcompat.widget.Toolbar

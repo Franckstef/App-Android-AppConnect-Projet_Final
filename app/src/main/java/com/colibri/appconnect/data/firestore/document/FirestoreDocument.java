@@ -2,6 +2,13 @@ package com.colibri.appconnect.data.firestore.document;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
+
+import com.colibri.appconnect.data.firestore.firestorelive.DocumentReferenceTo;
+import com.colibri.appconnect.util.QueryStatus;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.DocumentReference;
@@ -157,7 +164,9 @@ public abstract  class FirestoreDocument {
             case FLOATING_DOC:
             case DOCUMENT:
                 final String id = getDocId();
-                documentReference = parentCollectionReference.document(id);
+                if (parentCollectionReference != null) {
+                    documentReference = parentCollectionReference.document(id);
+                }
                 assert getState() == DocumentState.DOCUMENT;
                 break;
         }
@@ -343,12 +352,31 @@ public abstract  class FirestoreDocument {
         return documentReference;
     }
 
-    public void pushToFirebase(){
+    public LiveData<? extends QueryStatus<? extends FirestoreDocument>> pushToFirebase(){
+
         if (documentReference == null) {
-            Log.e(TAG, "pushToFirebase: ", new Exception("Cannot execute pushToFirebase because documentReference is null"));
-            return;
+            if (parentCollectionReference == null) {
+                Log.e(TAG, "pushToFirebase: ", new Exception("Cannot execute pushToFirebase because parentCollectionReference is null"));
+                return new MutableLiveData<>(new QueryStatus.Error<>("Cannot execute pushToFirebase because parentCollectionReference is null"));
+            } else {
+                final Task<DocumentReference> task = parentCollectionReference.add(this);
+                return DocumentReferenceTo.liveData(task, this.getClass());
+            }
         }
-        documentReference.set(this);
+        MutableLiveData<QueryStatus<? extends FirestoreDocument>> updateDoc
+                = new MutableLiveData<>(new QueryStatus.Loading<>());
+
+        documentReference.set(this).addOnCompleteListener(taskComplete->{
+            if (taskComplete.isSuccessful()) {
+                updateDoc.setValue(new QueryStatus.Success<>(this));
+            } else {
+                Throwable taskCompleteException = taskComplete.getException();
+                Log.e("FireStoreLiveData", "", taskCompleteException);
+                updateDoc.setValue(new QueryStatus.Error<>(taskCompleteException));
+            }
+        });
+
+        return updateDoc;
     }
 
     public void linkToSnapshot(DocumentSnapshot snapshot){

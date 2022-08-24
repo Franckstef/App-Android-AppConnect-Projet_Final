@@ -78,10 +78,6 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
                 final String displayName = userQueryStatus.getData().getDisplayName();
                 name.setText("Bonjour,  " + displayName + "\n Prêt à construire l'avenir?");
                 break;
-            case Error:
-                break;
-            case Loading:
-                break;
         }
     }
     private void OnNewsFeedUpdate(QueryStatus<List<News>> listQueryStatus){

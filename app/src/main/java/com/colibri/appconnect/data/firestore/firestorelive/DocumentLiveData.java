@@ -3,153 +3,91 @@ package com.colibri.appconnect.data.firestore.firestorelive;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.colibri.appconnect.data.firestore.document.FirestoreDocument;
 import com.colibri.appconnect.data.firestore.firestorelive.util.FirestoreLiveUtil;
+import com.colibri.appconnect.util.QueryStates;
 import com.colibri.appconnect.util.QueryStatus;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-class DocumentLiveDataNative<T> extends LiveData<QueryStatus<T>> {
-    private static final String TAG = "AP::DocLiveDataNative";
-    private final DocumentReference documentReference;
-    private final Class<T> aClass;
+class DocumentLiveDataNative<T> extends DocumentLiveData<T>{
+    private final Class<T> valueType;
+    DocumentLiveDataNative(DocumentReference documentReference, Class<T> valueType) {
+        super(documentReference);
+        this.valueType = valueType;
+    }
 
-    private ListenerRegistration listener = null;
 
-    DocumentLiveDataNative(DocumentReference documentReference, Class<T> c){
-        this.documentReference = documentReference;
-        aClass = c;
+    @Override
+    QueryStatus<T> onNewDocument(@NonNull DocumentSnapshot value) {
+        return FirestoreLiveUtil.NewDocumentToPojo(value, this.valueType);
     }
 
     @Override
-    protected void onActive(){
-        super.onActive();
-        setValue(new QueryStatus.Loading<>());
-        listener = documentReference.addSnapshotListener((documentSnapshot, exception) -> {
-            if (exception == null) {
-                if (documentSnapshot != null) {
-                    final T pojo = FirestoreLiveUtil.DocumentToPojo(documentSnapshot, aClass);
-                    if (pojo == null) {
-                        if(FirestoreDocument.class.isAssignableFrom(aClass)){
-                            try {
-                                final Constructor<? extends T> ctor = aClass.getConstructor(DocumentSnapshot.class);
-                                Log.d(TAG, "onActive: Found Ctor");
-                                final T newInstance = ctor.newInstance(documentSnapshot);
-                                setValue(new QueryStatus.Error<>("No Document Found, but is FirestoreDoc",newInstance));
-                            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                                setValue(new QueryStatus.Error<>(e.getMessage()));
-                            }
-
-                        } else {
-                            setValue(new QueryStatus.Error<>("No Document Found"));
-                        }
-                    } else {
-                        setValue(new QueryStatus.Success<>(
-                                pojo
-                        ));
-                    }
-                } else {
-                    setValue(new QueryStatus.Error<>("No Document snapshot"));
-                }
-            } else {
-                Log.e("FireStoreLiveData", "", exception);
-                setValue(new QueryStatus.Error<>(exception));
-            }
-        });
-
-    }
-
-    @Override
-    protected void onInactive(){
-        super.onInactive();
-
-        if (listener != null) {
-            listener.remove();
-            listener = null;
+    QueryStatus<T> onSuccessResponse(@NonNull DocumentSnapshot value) {
+        final T pojo = FirestoreLiveUtil.DocumentToPojo(value, this.valueType);
+        if (pojo == null) {
+            return new QueryStatus.Error<T>("Document couldn't be converted to POJO");
         }
+        return new QueryStatus.Success<>(pojo);
     }
 }
 
-class DocumentLiveDataCustom<T> extends LiveData<QueryStatus<T>> {
-    private final DocumentReference documentReference;
+class DocumentLiveDataCustom<T> extends DocumentLiveData<T> {
+    private static final String TAG = "AP::DocLiveDataCustom";
     private final IDocumentSnapshotParser<T> parser;
 
-    private ListenerRegistration listener = null;
-
     DocumentLiveDataCustom(DocumentReference cr, IDocumentSnapshotParser<T> parser){
-        documentReference = cr;
+        super(cr);
         this.parser =parser;
     }
 
     @Override
-    protected void onActive(){
-        super.onActive();
-        setValue(new QueryStatus.Loading<>());
-        listener = documentReference.addSnapshotListener((documentSnapshot, exception) -> {
-            if (exception == null) {
-                final T parsed = parser.parse(documentSnapshot);
-
-                if (parsed == null) {
-                    setValue(new QueryStatus.Error<>("No Document Found"));
-                } else {
-                    setValue(new QueryStatus.Success<>(
-                            parsed
-                    ));
-                }
-            } else {
-                Log.e("FireStoreLiveData", "", exception);
-                setValue(new QueryStatus.Error<>(exception));
-            }
-        });
+    QueryStatus<T> onNewDocument(@NonNull DocumentSnapshot value) {
+        final T parsed = parser.parse(value);
+        if (parsed == null) {
+            final ExceptionParserNoValue parserNoValue = new ExceptionParserNoValue();
+            Log.e(TAG, "onNewDocument: ", parserNoValue);
+            return new QueryStatus.Error<>(parserNoValue);
+        }
+        return new QueryStatus.NewDocument<>(parsed);
     }
 
     @Override
-    protected void onInactive(){
-        super.onInactive();
-
-        if (listener != null) {
-            listener.remove();
-            listener = null;
+    QueryStatus<T> onSuccessResponse(@NonNull DocumentSnapshot value) {
+        final T parsed = parser.parse(value);
+        if (parsed == null) {
+            final ExceptionParserNoValue parserNoValue = new ExceptionParserNoValue();
+            Log.e(TAG, "onSuccessResponse: ", parserNoValue);
+            return new QueryStatus.Error<>(parserNoValue);
         }
+        return new QueryStatus.Success<>(parsed);
     }
 }
 
-class DocumentLiveDataRaw extends LiveData<QueryStatus<DocumentSnapshot>> {
-    private final DocumentReference documentReference;
+class DocumentLiveDataRaw extends DocumentLiveData<DocumentSnapshot>{
+    DocumentLiveDataRaw(DocumentReference documentReference) {
+        super(documentReference);
+    }
 
-    private ListenerRegistration listener = null;
+    private static final String TAG = "AP::DocLiveDataRaw";
 
-    DocumentLiveDataRaw(DocumentReference cr){
-        documentReference = cr;
+    @Override
+    QueryStatus<DocumentSnapshot> onNewDocument(@NonNull DocumentSnapshot value) {
+        return new QueryStatus.NewDocument<>(value);
     }
 
     @Override
-    protected void onActive(){
-        super.onActive();
-        setValue(new QueryStatus.Loading<>());
-        listener = documentReference.addSnapshotListener((documentSnapshot, exception) -> {
-            if (exception == null) {
-                setValue(new QueryStatus.Success<>(documentSnapshot));
-            } else {
-                Log.e("FireStoreLiveData", "", exception);
-                setValue(new QueryStatus.Error<>(exception));
-            }
-        });
-    }
-
-    @Override
-    protected void onInactive(){
-        super.onInactive();
-
-        if (listener != null) {
-            listener.remove();
-            listener = null;
-        }
+    QueryStatus<DocumentSnapshot> onSuccessResponse(@NonNull DocumentSnapshot value) {
+        return new QueryStatus.Success<>(value);
     }
 }
+

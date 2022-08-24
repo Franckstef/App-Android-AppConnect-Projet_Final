@@ -7,12 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.colibri.appconnect.ChatActivity;
-import com.colibri.appconnect.HomeActivity;
 import com.colibri.appconnect.R;
 import com.colibri.appconnect.databinding.FragmentProfilBinding;
 
@@ -58,15 +58,14 @@ public class ProfilFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             userId = getArguments().getString(ARG_USERID);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        SharedUserProfileViewModel.Factory vmFactory = new SharedUserProfileViewModel.Factory("as", userId);
+        SharedUserProfileViewModel.Factory vmFactory = new SharedUserProfileViewModel.Factory(userId);
         viewModel = new ViewModelProvider(this,vmFactory).get(SharedUserProfileViewModel.class);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         
         // Inflate the layout for this fragment
@@ -77,29 +76,39 @@ public class ProfilFragment extends Fragment {
                 false
         );
 
-        viewModel.setSignOutClickListener(v->{});
+        viewModel.setSignOutClickListener(this::OnSignOut);
+        viewModel.setPhoneClickListener(this::OnPhoneAction);
+        viewModel.setEmailClickListener(this::OnEmailAction);
+        viewModel.setChatClickListener(this::OnChatAction);
 
-        viewModel.setPhoneClickListener(phoneNumber->{
-            final Uri phoneUri = Uri.parse("tel:" + phoneNumber);
-            Intent intent = new Intent(Intent.ACTION_DIAL, phoneUri);
-            startActivity(intent);
-        });
 
-        viewModel.setEmailClickListener(email->{
-            final Uri emailUri = Uri.parse("mailto:" + email);
-            Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-            emailIntent.setData(emailUri);
-            startActivity(Intent.createChooser(emailIntent, "Envoyer un courriel"));
-        });
-        viewModel.setChatAction(OtherUserId -> {
-            Intent intent = new Intent(container.getContext(), ChatActivity.class);
-            intent.putExtra(ChatActivity.USERTO, OtherUserId);
-            startActivity(intent);
-        });
         binding.setLifecycleOwner(this);
         binding.setViewModel(viewModel);
 
         return binding.getRoot();
 
+    }
+
+    private void OnChatAction(String OtherUserId){
+        Intent intent = new Intent(getContext(), ChatActivity.class);
+        intent.putExtra(ChatActivity.USERTO, OtherUserId);
+        startActivity(intent);
+    }
+
+    private void OnPhoneAction(String phoneNumber){
+        final Uri phoneUri = Uri.parse("tel:" + phoneNumber);
+        Intent intent = new Intent(Intent.ACTION_DIAL, phoneUri);
+        startActivity(intent);
+    }
+
+    private void OnEmailAction(String email){
+        final Uri emailUri = Uri.parse("mailto:" + email);
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(emailUri);
+        startActivity(Intent.createChooser(emailIntent, "Envoyer un courriel"));
+    }
+
+    private void OnSignOut(View signOutButton) {
+        requireActivity().finish();
     }
 }

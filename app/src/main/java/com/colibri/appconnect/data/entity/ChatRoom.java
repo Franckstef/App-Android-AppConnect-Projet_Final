@@ -1,8 +1,10 @@
 package com.colibri.appconnect.data.entity;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 
 import com.colibri.appconnect.data.firestore.document.ChatDoc;
+import com.colibri.appconnect.data.firestore.document.FirestoreDocument;
 import com.colibri.appconnect.data.firestore.document.MessageDoc;
 import com.colibri.appconnect.data.firestore.firestorelive.CollectionTo;
 import com.colibri.appconnect.util.QueryStatus;
@@ -23,6 +25,9 @@ public class ChatRoom {
         this.document = document;
     }
 
+    public void setName(String name){
+        document.setName(name);
+    }
     public String getName(){
         return document.getName();
     }
@@ -44,7 +49,21 @@ public class ChatRoom {
     public LiveData<QueryStatus<List<MessageDoc>>> getMessagesSnapshot() {
         return CollectionTo.liveData(getMessagesQuery().get(), MessageDoc.class);
     }
-    
+    public LiveData<QueryStatus<ChatRoom>> pushToFirebase(){
+         return Transformations.map(document.pushToFirebase(), input -> {
+            switch (input.getState()) {
+                case Success:
+                    return new QueryStatus.Success<>(new ChatRoom(input.getData()));
+                case Error:
+                    return new QueryStatus.Error<>(input.getMessage());
+                case Loading:
+                    return new QueryStatus.Loading<>();
+                default:
+                    return new QueryStatus.Error<>("Unknown Error");
+            }
+        });
+
+    }
     public void sendMessage(MessageDoc message, OnMessageSend callback){
        getMessageCollection().add(message).addOnCompleteListener(task -> {
            if(callback != null){

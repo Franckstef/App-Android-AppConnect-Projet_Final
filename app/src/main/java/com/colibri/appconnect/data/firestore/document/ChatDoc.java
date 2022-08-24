@@ -1,18 +1,9 @@
 package com.colibri.appconnect.data.firestore.document;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
-import com.colibri.appconnect.data.firestore.firestorelive.CollectionTo;
 import com.colibri.appconnect.util.QueryStatus;
-import com.google.firebase.firestore.DocumentId;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.Exclude;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-
-import java.util.List;
 
 public class ChatDoc extends FirestoreDocument {
 
@@ -47,5 +38,10 @@ public class ChatDoc extends FirestoreDocument {
                 "docId='" + getDocId() + '\'' +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public LiveData<QueryStatus<ChatDoc>> pushToFirebase() {
+        return (LiveData<QueryStatus<ChatDoc>>) super.pushToFirebase();
     }
 }
