@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.colibri.appconnect.data.entity.User;
@@ -40,6 +41,8 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
     private View view;
     private OnButtonClickedListener mCallback;
     HomeActivity homeActivity;
+    private LinearLayout progressBarHolder;
+    private TextView loading;
 
     public interface OnButtonClickedListener {
         void onButtonClicked(View view, Bundle bundle);
@@ -58,6 +61,8 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
         viewPager = view.findViewById(R.id.viewPager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getContext(), images);
         viewPager.setAdapter(viewPagerAdapter);
+        progressBarHolder = view.findViewById(R.id.progressBarHolder);
+        loading = view.findViewById(R.id.textChargement);
 
         name = view.findViewById(R.id.textView);
 
@@ -87,6 +92,8 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
     private void OnNewsFeedUpdate(QueryStatus<List<News>> listQueryStatus){
         if(listQueryStatus.isSuccessful()){
             ArrayList<News> list= new ArrayList<>(listQueryStatus.getData());
+            progressBarHolder.setVisibility(View.GONE);
+            loading.setVisibility(View.GONE);
 
             NewsFeedAdapter adapter = new NewsFeedAdapter(list, homeActivity);
             recyclerView.setAdapter(adapter);
