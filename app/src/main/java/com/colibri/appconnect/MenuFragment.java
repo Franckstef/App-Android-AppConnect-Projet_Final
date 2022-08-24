@@ -39,8 +39,8 @@ public class MenuFragment extends Fragment {
         list.add(new MenuItem("Ressources", R.drawable.ic_ressources24));
         list.add(new MenuItem("Formulaires", R.drawable.ic_document));
         list.add(new MenuItem("Evenements", R.drawable.ic_event));
+        list.add(new MenuItem("FAQ", R.drawable.ic_question));
         list.add(new MenuItem("Réglages", R.drawable.ic_settings));
-        list.add(new MenuItem("Suggestions", R.drawable.ic_question));
 
         MenuItemAdapter adapter = new MenuItemAdapter(getContext(), list);
         menu.setAdapter(adapter);
