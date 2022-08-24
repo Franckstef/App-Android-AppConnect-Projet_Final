@@ -33,7 +33,7 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
 
     public HomeFragment() {}
 
-    ViewPager viewPager;
+    private ViewPager viewPager;
     int[] images = {R.drawable.img_1, R.drawable.img_2, R.drawable.img_3, R.drawable.img_4, R.drawable.img_5, R.drawable.img_6, R.drawable.img_7, R.drawable.img_8, R.drawable.img_9, R.drawable.img_10, R.drawable.img_11, R.drawable.img_12};
     private final ArrayList<Integer> ImagesArray = new ArrayList<>();
     private static int currentPage = 0;
@@ -61,8 +61,8 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
         viewPager = view.findViewById(R.id.viewPager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getContext(), images);
         viewPager.setAdapter(viewPagerAdapter);
-        progressBarHolder = view.findViewById(R.id.progressBarHolder);
 
+        progressBarHolder = view.findViewById(R.id.progressBarHolder);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(homeActivity));
@@ -89,9 +89,9 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
     }
     private void OnNewsFeedUpdate(QueryStatus<List<News>> listQueryStatus){
         if(listQueryStatus.isSuccessful()){
-            ArrayList<News> list= new ArrayList<>(listQueryStatus.getData());
             progressBarHolder.setVisibility(View.GONE);
 
+            ArrayList<News> list= new ArrayList<>(listQueryStatus.getData());
             NewsFeedAdapter adapter = new NewsFeedAdapter(list, homeActivity);
             recyclerView.setAdapter(adapter);
             adapter.setOnClick(this);
@@ -128,7 +128,7 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
             public void run() {
                 handler.post(Update);
             }
-        }, 3000, 3000);
+        }, 2000, 3000);
 
     }
 
