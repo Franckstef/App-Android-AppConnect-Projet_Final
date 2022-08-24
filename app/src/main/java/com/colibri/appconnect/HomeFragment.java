@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.colibri.appconnect.data.entity.User;
@@ -32,7 +33,7 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
 
     public HomeFragment() {}
 
-    ViewPager viewPager;
+    private ViewPager viewPager;
     int[] images = {R.drawable.img_1, R.drawable.img_2, R.drawable.img_3, R.drawable.img_4, R.drawable.img_5, R.drawable.img_6, R.drawable.img_7, R.drawable.img_8, R.drawable.img_9, R.drawable.img_10, R.drawable.img_11, R.drawable.img_12};
     private final ArrayList<Integer> ImagesArray = new ArrayList<>();
     private static int currentPage = 0;
@@ -40,6 +41,7 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
     private View view;
     private OnButtonClickedListener mCallback;
     HomeActivity homeActivity;
+    private LinearLayout progressBarHolder;
 
     public interface OnButtonClickedListener {
         void onButtonClicked(View view, Bundle bundle);
@@ -55,11 +57,12 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
 
         ((HomeActivity) getActivity()).getSupportActionBar().setTitle("AppConnect");
         view = inflater.inflate(R.layout.fragment_home, container, false);
+        name = view.findViewById(R.id.textView);
         viewPager = view.findViewById(R.id.viewPager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getContext(), images);
         viewPager.setAdapter(viewPagerAdapter);
 
-        name = view.findViewById(R.id.textView);
+        progressBarHolder = view.findViewById(R.id.progressBarHolder);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(homeActivity));
@@ -86,8 +89,9 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
     }
     private void OnNewsFeedUpdate(QueryStatus<List<News>> listQueryStatus){
         if(listQueryStatus.isSuccessful()){
-            ArrayList<News> list= new ArrayList<>(listQueryStatus.getData());
+            progressBarHolder.setVisibility(View.GONE);
 
+            ArrayList<News> list= new ArrayList<>(listQueryStatus.getData());
             NewsFeedAdapter adapter = new NewsFeedAdapter(list, homeActivity);
             recyclerView.setAdapter(adapter);
             adapter.setOnClick(this);
@@ -124,7 +128,7 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
             public void run() {
                 handler.post(Update);
             }
-        }, 3000, 3000);
+        }, 2000, 3000);
 
     }
 
