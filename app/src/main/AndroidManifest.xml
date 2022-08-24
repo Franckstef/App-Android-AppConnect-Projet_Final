@@ -4,6 +4,7 @@
     package="com.colibri.appconnect">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
@@ -15,18 +16,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppConnect"
-        tools:targetApi="31">
+        tools:targetApi="32">
+        <activity
+            android:name=".HistoireActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EvenementsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".userprofile.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RessourcesActivity"
+            android:exported="false" />
         <activity
             android:name=".DetailsNewsActivity"
             android:exported="false" />
         <activity
             android:name=".HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ChatActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,6 +41,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

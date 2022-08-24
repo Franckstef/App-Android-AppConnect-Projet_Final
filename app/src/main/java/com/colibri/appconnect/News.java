@@ -11,6 +11,7 @@ public class News implements Parcelable{
     private String article;
     private String date;
 
+    public News(){}
     public News(String image, String titre, String intro, String article, String description) {
         this.image = image;
         this.titre = titre;
