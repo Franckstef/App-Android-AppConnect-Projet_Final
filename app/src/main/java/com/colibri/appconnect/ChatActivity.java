@@ -49,6 +49,7 @@ public class ChatActivity extends AppCompatActivity {
                             new MessageDoc(binding.etChatMessage.getText().toString(), "userToId")
                             ,()->{
                         setAdapter(buildChatChannel(getIntent().getStringExtra(USERTO)));
+                        binding.etChatMessage.setText("");
                     });
                 }
                 else{
@@ -57,13 +58,13 @@ public class ChatActivity extends AppCompatActivity {
                         if(test.isSuccessful()){
                             test.getData()
                                     .sendMessage(new MessageDoc(binding.etChatMessage.getText().toString(), userFromId), null);
+                            binding.etChatMessage.setText("");
                         }
                     });
 
 
                     Log.e(TAG, "onCreate: else" );
                 }
-
             });
 
     }
