@@ -61,7 +61,6 @@ public class ChatRoomListAdapter extends ListAdapter<MessageDoc, ChatRoomListAda
             binding.setDate(strDate);
             binding.setIsFromMe(isFromMe);
             binding.setMessageDoc(abb);
-
         }
     }
 

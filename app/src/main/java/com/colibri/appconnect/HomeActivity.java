@@ -26,6 +26,7 @@ import com.colibri.appconnect.data.firestore.document.MessageDoc;
 import com.colibri.appconnect.data.repository;
 import com.colibri.appconnect.databinding.ActivityHomeBinding;
 import com.colibri.appconnect.userprofile.ProfilFragment;
+import com.colibri.appconnect.userprofile.ProfileActivity;
 import com.colibri.appconnect.util.QueryStates;
 import com.colibri.appconnect.util.QueryStatus;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -121,25 +122,13 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnBu
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Fragment fragment = null;
-        Class fragmentClass;
+
 
         if (item.getItemId() == R.id.profil) {
-            fragmentClass = ProfilFragment.class;
-        } else {
-            fragmentClass = HomeFragment.class;
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
         }
-
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        assert fragment != null;
-        fragmentManager.beginTransaction().replace(R.id.flFragment, fragment).commit();
-        return true;
+        return false;
     }
 
     @SuppressLint("NonConstantResourceId")
