@@ -42,7 +42,6 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
     private OnButtonClickedListener mCallback;
     HomeActivity homeActivity;
     private LinearLayout progressBarHolder;
-    private TextView loading;
 
     public interface OnButtonClickedListener {
         void onButtonClicked(View view, Bundle bundle);
@@ -58,13 +57,12 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
 
         ((HomeActivity) getActivity()).getSupportActionBar().setTitle("AppConnect");
         view = inflater.inflate(R.layout.fragment_home, container, false);
+        name = view.findViewById(R.id.textView);
         viewPager = view.findViewById(R.id.viewPager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getContext(), images);
         viewPager.setAdapter(viewPagerAdapter);
         progressBarHolder = view.findViewById(R.id.progressBarHolder);
-        loading = view.findViewById(R.id.textChargement);
 
-        name = view.findViewById(R.id.textView);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(homeActivity));
@@ -93,7 +91,6 @@ public class HomeFragment extends Fragment implements NewsFeedAdapter.OnItemClic
         if(listQueryStatus.isSuccessful()){
             ArrayList<News> list= new ArrayList<>(listQueryStatus.getData());
             progressBarHolder.setVisibility(View.GONE);
-            loading.setVisibility(View.GONE);
 
             NewsFeedAdapter adapter = new NewsFeedAdapter(list, homeActivity);
             recyclerView.setAdapter(adapter);
