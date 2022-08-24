@@ -38,8 +38,11 @@ public class ChatActivity extends AppCompatActivity {
 
         ChatRoomListAdapter chatRoomListAdapter = new ChatRoomListAdapter();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        linearLayoutManager.setStackFromEnd(true);
         binding.rvChatMessageHistory.setLayoutManager(linearLayoutManager);
         binding.rvChatMessageHistory.setAdapter(chatRoomListAdapter);
+
+
 
         checkIfExistChatRoom();
 
@@ -59,6 +62,7 @@ public class ChatActivity extends AppCompatActivity {
                             test.getData()
                                     .sendMessage(new MessageDoc(binding.etChatMessage.getText().toString(), userFromId), null);
                             binding.etChatMessage.setText("");
+                            binding.rvChatMessageHistory.scrollToPosition(binding.rvChatMessageHistory.getAdapter().getItemCount());
                         }
                     });
 
