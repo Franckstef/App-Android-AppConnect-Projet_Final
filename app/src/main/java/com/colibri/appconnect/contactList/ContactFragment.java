@@ -1,5 +1,6 @@
 package com.colibri.appconnect.contactList;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.colibri.appconnect.data.entity.User;
 import com.colibri.appconnect.data.repository;
 import com.colibri.appconnect.databinding.FragmentContactBinding;
 import com.colibri.appconnect.userprofile.ProfilFragment;
+import com.colibri.appconnect.userprofile.ProfileActivity;
 import com.colibri.appconnect.util.QueryStatus;
 
 import java.util.List;
@@ -74,11 +76,8 @@ public class ContactFragment extends Fragment implements ContactClickListener{
 
     @Override
     public void onUserClick(String userId) {
-        Fragment fr = ProfilFragment.newInstance(userId);
-        FragmentManager fm = getParentFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.flFragment, fr);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-        ft.commit();
+        Intent intent = new Intent(getContext(), ProfileActivity.class);
+        intent.putExtra(ProfileActivity.USERID, userId);
+        startActivity(intent);
     }
 }
