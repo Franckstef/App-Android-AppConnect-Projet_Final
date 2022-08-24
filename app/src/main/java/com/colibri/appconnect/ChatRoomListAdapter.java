@@ -24,7 +24,7 @@ import java.util.Objects;
 public class ChatRoomListAdapter extends ListAdapter<MessageDoc, ChatRoomListAdapter.ContactHolder> {
 
     ContactClickListener contactClickListener;
-    boolean isFromMe = false;
+
     protected ChatRoomListAdapter() {
         super(MessageDoc.diffCallback);
     }
@@ -52,6 +52,7 @@ public class ChatRoomListAdapter extends ListAdapter<MessageDoc, ChatRoomListAda
             binding = MessageItemBinding.bind(itemView);
         }
         void bind(MessageDoc abb){
+            boolean isFromMe = false;
             if (Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid().equals(abb.getUserFromId())) {
                 isFromMe = true;
             }
