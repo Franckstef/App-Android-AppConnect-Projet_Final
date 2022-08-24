@@ -1,5 +1,6 @@
 package com.colibri.appconnect;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import com.colibri.appconnect.data.firestore.document.MessageDoc;
 import com.colibri.appconnect.databinding.MessageItemBinding;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -52,11 +55,12 @@ public class ChatRoomListAdapter extends ListAdapter<MessageDoc, ChatRoomListAda
             if (Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid().equals(abb.getUserFromId())) {
                 isFromMe = true;
             }
-            Date javaDate = abb.getTimestamp().toDate();
-            binding.setDate(javaDate.toString());
+            Date date = abb.getTimestamp().toDate();
+            @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("dd-MM h:mm:ss");
+            String strDate = dateFormat.format(date);
+            binding.setDate(strDate);
             binding.setIsFromMe(isFromMe);
             binding.setMessageDoc(abb);
-
         }
     }
 
