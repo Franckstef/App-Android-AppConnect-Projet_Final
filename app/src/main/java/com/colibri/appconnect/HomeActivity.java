@@ -20,6 +20,7 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.colibri.appconnect.contactList.ContactFragment;
 import com.colibri.appconnect.data.Authenticator;
@@ -40,6 +41,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnBu
     ActivityHomeBinding binding;
     repository repo;
     Authenticator authenticator;
+    Fragment frag = null;
 
     private void TestChatRoom(){
 
@@ -137,7 +139,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnBu
     public void setBottomNavigation() {
         BottomNavigationView navView = findViewById(R.id.bottom_navigation);
         navView.setOnItemSelectedListener(item -> {
-            Fragment frag =null;
+
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     frag = new HomeFragment();
@@ -178,12 +180,19 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnBu
 
     @Override
     public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setIcon(R.drawable.ic_alert)
-                .setTitle("Fermer l'application ?")
-                .setMessage("Êtes-vous sur de vouloir quitter l'application?")
-                .setPositiveButton("Oui", (dialog, which) -> finish())
-                .setNegativeButton("Non", null)
-                .show();
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.flFragment);
+
+        if (f instanceof MenuFragment || f instanceof ContactFragment || f instanceof ConversationsFragment ) {
+            frag = new HomeFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, frag).commit();
+        } else {
+            new AlertDialog.Builder(this)
+                    .setIcon(R.drawable.ic_alert)
+                    .setTitle("Fermer l'application ?")
+                    .setMessage("Êtes-vous sur de vouloir quitter l'application?")
+                    .setPositiveButton("Oui", (dialog, which) -> finish())
+                    .setNegativeButton("Non", null)
+                    .show();
+        }
     }
 }
