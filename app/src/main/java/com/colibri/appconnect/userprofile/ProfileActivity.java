@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.colibri.appconnect.R;
 
-import com.colibri.appconnect.userprofile.ui.main.ProfileFragment2;
+
 
 import java.util.Objects;
 
