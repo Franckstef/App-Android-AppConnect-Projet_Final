@@ -24,6 +24,9 @@
             android:name=".EvenementsActivity"
             android:exported="false" />
         <activity
+            android:name=".userprofile.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".RessourcesActivity"
             android:exported="false" />
         <activity

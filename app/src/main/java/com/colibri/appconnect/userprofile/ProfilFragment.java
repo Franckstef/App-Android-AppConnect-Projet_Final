@@ -68,7 +68,7 @@ public class ProfilFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((HomeActivity) requireActivity()).getSupportActionBar().setTitle("Profil");
+        
         // Inflate the layout for this fragment
         FragmentProfilBinding binding = DataBindingUtil.inflate(
                 inflater,
