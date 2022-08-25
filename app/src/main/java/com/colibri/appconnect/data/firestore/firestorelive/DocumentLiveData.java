@@ -25,7 +25,6 @@ class DocumentLiveDataNative<T> extends DocumentLiveData<T>{
         this.valueType = valueType;
     }
 
-
     @Override
     QueryStatus<T> onNewDocument(@NonNull DocumentSnapshot value) {
         return FirestoreLiveUtil.NewDocumentToPojo(value, this.valueType);
