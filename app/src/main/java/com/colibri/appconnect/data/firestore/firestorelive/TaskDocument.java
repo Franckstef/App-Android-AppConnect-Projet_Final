@@ -2,84 +2,84 @@ package com.colibri.appconnect.data.firestore.firestorelive;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
 
 import com.colibri.appconnect.data.firestore.firestorelive.util.FirestoreLiveUtil;
 import com.colibri.appconnect.util.QueryStatus;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-class TaskDocumentLiveDataNative<T> extends LiveData<QueryStatus<T>> {
-    private final Task<DocumentSnapshot> task;
-    private final Class<T> aClass;
-    TaskDocumentLiveDataNative(Task<DocumentSnapshot> task, Class<T> c){
-        this.task = task;
-        aClass = c;
+class TaskDocumentLiveDataNative<T> extends DocumentTaskLiveData<T> {
+    private final Class<T> valueType;
+
+    protected TaskDocumentLiveDataNative(Task<DocumentSnapshot> task, Class<T> valueType) {
+        super(task);
+        this.valueType = valueType;
+    }
+
+
+    @Override
+    QueryStatus<T> onNewDocument(@NonNull DocumentSnapshot value) {
+        return FirestoreLiveUtil.NewDocumentToPojo(value, this.valueType);
     }
 
     @Override
-    protected void onActive(){
-        super.onActive();
-        setValue(new QueryStatus.Loading<>());
-        task.addOnCompleteListener(taskComplete -> {
-            if (taskComplete.isSuccessful()) {
-                DocumentSnapshot documentSnapshot = taskComplete.getResult();
-                setValue(new QueryStatus.Success<>(
-                        FirestoreLiveUtil.DocumentToPojo(documentSnapshot, aClass)
-                ));
-            } else {
-                Throwable taskCompleteException = taskComplete.getException();
-                Log.e("FireStoreLiveData", "", taskCompleteException);
-                setValue(new QueryStatus.Error<>(taskCompleteException));
-            }
-        });
+    QueryStatus<T> onSuccessResponse(@NonNull DocumentSnapshot value) {
+        final T pojo = FirestoreLiveUtil.DocumentToPojo(value, this.valueType);
+        if (pojo == null) {
+            return new QueryStatus.Error<T>("Document couldn't be converted to POJO");
+        }
+        return new QueryStatus.Success<>(pojo);
     }
+
 }
 
-class TaskDocumentLiveDataCustom<T> extends LiveData<QueryStatus<T>> {
-    private final Task<DocumentSnapshot> task;
+class TaskDocumentLiveDataCustom<T> extends DocumentTaskLiveData<T> {
     private final IDocumentSnapshotParser<T> parser;
-    TaskDocumentLiveDataCustom(Task<DocumentSnapshot> task, IDocumentSnapshotParser<T> parser){
-        this.task = task;
-        this.parser =parser;
+
+    protected TaskDocumentLiveDataCustom(Task<DocumentSnapshot> task, IDocumentSnapshotParser<T> parser) {
+        super(task);
+        this.parser = parser;
     }
 
     @Override
-    protected void onActive(){
-        super.onActive();
-        setValue(new QueryStatus.Loading<>());
-        task.addOnCompleteListener(taskComplete -> {
-            if (taskComplete.isSuccessful()) {
-                DocumentSnapshot documentSnapshot = taskComplete.getResult();
-                setValue(new QueryStatus.Success<>(parser.parse(documentSnapshot)));
-            } else {
-                Throwable taskCompleteException = taskComplete.getException();
-                Log.e("FireStoreLiveData", "", taskCompleteException);
-                setValue(new QueryStatus.Error<>(taskCompleteException));
-            }
-        });
+    QueryStatus<T> onNewDocument(@NonNull DocumentSnapshot value) {
+        final T parsed = parser.parse(value);
+        if (parsed == null) {
+            final ExceptionParserNoValue parserNoValue = new ExceptionParserNoValue();
+            Log.e(TAG, "onNewDocument: ", parserNoValue);
+            return new QueryStatus.Error<>(parserNoValue);
+        }
+        return new QueryStatus.NewDocument<>(parsed);
     }
+
+    @Override
+    QueryStatus<T> onSuccessResponse(@NonNull DocumentSnapshot value) {
+        final T parsed = parser.parse(value);
+        if (parsed == null) {
+            final ExceptionParserNoValue parserNoValue = new ExceptionParserNoValue();
+            Log.e(TAG, "onSuccessResponse: ", parserNoValue);
+            return new QueryStatus.Error<>(parserNoValue);
+        }
+        return new QueryStatus.Success<>(parsed);
+    }
+
+    private static final String TAG = "TaskDocumentLiveDataCus";
 }
 
-class TaskDocumentLiveDataRaw extends LiveData<QueryStatus<DocumentSnapshot>> {
-    private final Task<DocumentSnapshot> task;
+class TaskDocumentLiveDataRaw extends DocumentTaskLiveData<DocumentSnapshot> {
 
-    TaskDocumentLiveDataRaw(Task<DocumentSnapshot> task){
-        this.task = task;
+    protected TaskDocumentLiveDataRaw(Task<DocumentSnapshot> task) {
+        super(task);
     }
 
     @Override
-    protected void onActive(){
-        super.onActive();
-        setValue(new QueryStatus.Loading<>());
-        task.addOnCompleteListener(taskComplete -> {
-            if (taskComplete.isSuccessful()) {
-                setValue(new QueryStatus.Success<>(taskComplete.getResult()));
-            } else {
-                Throwable taskCompleteException = taskComplete.getException();
-                Log.e("FireStoreLiveData", "", taskCompleteException);
-                setValue(new QueryStatus.Error<>(taskCompleteException));
-            }
-        });
+    QueryStatus<DocumentSnapshot> onNewDocument(@NonNull DocumentSnapshot value) {
+        return new QueryStatus.NewDocument<>(value);
+    }
+
+    @Override
+    QueryStatus<DocumentSnapshot> onSuccessResponse(@NonNull DocumentSnapshot value) {
+        return new QueryStatus.Success<>(value);
     }
 }

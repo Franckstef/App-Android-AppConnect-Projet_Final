@@ -3,6 +3,7 @@ package com.colibri.appconnect.data.firestore.firestorelive;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
+
 import com.colibri.appconnect.util.QueryStatus;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -38,4 +39,6 @@ public class DocumentTo {
     public static LiveData<QueryStatus<DocumentSnapshot>> liveData(Task<DocumentSnapshot> task) {
         return new TaskDocumentLiveDataRaw(task);
     }
+
+
 }
