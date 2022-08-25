@@ -55,13 +55,19 @@ public class repository {
     }
 
     public LiveData<QueryStatus<ChatRoom>> getChatroom(String chatroomId){
-        LiveData<QueryStatus<ChatDoc>> queryChatDoc = DocumentTo.liveData(getChatsCollection().document(chatroomId), ChatDoc.class);
+        LiveData<QueryStatus<ChatDoc>> queryChatDoc = DocumentTo.liveData(getChatsCollection().document(chatroomId).get(), ChatDoc.class);
         return Transformations.map(queryChatDoc, input -> {
+            Log.d(TAG, "getChatroom: " + input);
             switch (input.getState()){
                 case Success:
                     return new QueryStatus.Success<>(input.getData() != null ? new ChatRoom(input.getData()) : null);
                 case Error:
-                    return new QueryStatus.Error<>(input.getMessage());
+                    if (input.getData() == null) {
+                        return new QueryStatus.Error<>(input.getMessage());
+                    } else {
+                        return new QueryStatus.Error<>(input.getMessage(), new ChatRoom(input.getData()));
+                    }
+
                 case Loading:
                     return new QueryStatus.Loading<>();
                 default:
@@ -126,10 +132,12 @@ public class repository {
                 new Observer<QueryStatus<String>>() {
                     LiveData<QueryStatus<User>> liveCurrentUser = null;
                     @Override
-                    public void onChanged(QueryStatus<String> uid) {
-                        Log.d(TAG, "liveUID onChanged: ");
-                        if (uid == null) {
-                            liveResponse.postValue(new QueryStatus.Error<>("UserID isn't initialize"));
+                    public void onChanged(QueryStatus<String> qsUID) {
+                        QueryStates state = qsUID.getState();
+
+                        Log.d(TAG, "getCurrentUser liveUID onChanged: " + state);
+                        if (qsUID == null) {
+                            liveResponse.postValue(new QueryStatus.Error<>("Query isn't initialize"));
                             return;
                         }
 
@@ -138,16 +146,18 @@ public class repository {
                             liveCurrentUser = null;
                         }
 
-                        QueryStates state = uid.getState();
                         switch (state){
                             case Success:
                                 liveResponse.postValue(new QueryStatus.Loading<>());
-                                liveCurrentUser = getUser(uid.getData(), true);
+                                liveCurrentUser = getUser(qsUID.getData(), true);
                                 liveResponse.addSource(liveCurrentUser, liveResponse::setValue);
+                                break;
                             case Error:
-                                liveResponse.postValue((new QueryStatus.Error<>(uid.getMessage())));
+                                liveResponse.postValue((new QueryStatus.Error<>(qsUID.getMessage())));
+                                break;
                             case Loading:
                                 liveResponse.postValue(new QueryStatus.Loading<>());
+                                break;
                             default:
                                 liveResponse.postValue(new QueryStatus.Error<>("Unknown error with UserId"));
                         }
@@ -207,11 +217,11 @@ public class repository {
                    }
                    return new QueryStatus.Success<>(userList);
                case Error:
-                   return new QueryStatus.Error<List<User>>(queryUserList.getMessage());
+                   return new QueryStatus.Error<>(queryUserList.getMessage());
                case Loading:
                    return new QueryStatus.Loading<>();
                default:
-                   return new QueryStatus.Error<List<User>>("Unknow Error");
+                   return new QueryStatus.Error<>("Unknow Error");
            }
         });
     }
@@ -224,19 +234,23 @@ public class repository {
         LiveData<QueryStatus<UserDoc>> data = DocumentTo.liveData(repo_user, UserDoc.class);
         return Transformations.map(data,input -> {
             QueryStates state = input.getState();
+            final UserDoc userDoc = input.getData();
             switch (state){
                 case Success:
-                    if (input.getData() == null) {
-                        return new QueryStatus.Error<User>("No User Found");
+                    if (userDoc == null) {
+                        return new QueryStatus.Error<>("No User Found");
                     }
-                    return new QueryStatus.Success<>(new User(input.getData(), isCurrentUser));
+                    return new QueryStatus.Success<>(new User(userDoc, isCurrentUser));
+                case NewDocument:
+                    userDoc.pushToFirebase();
+                    return new QueryStatus.Success<>(new User(userDoc, isCurrentUser));
+
                 case Error:
-                    if (input.getError() != null) {
-                        return new QueryStatus.Error<>(input.getError());
-                    }
-                    return new QueryStatus.Error<>(input.getMessage());
+                    return QueryStatus.Error.convert(input);
+
                 case Loading:
                     return new QueryStatus.Loading<>();
+
                 default:
                     return new QueryStatus.Error<>("Query State Invalid");
             }

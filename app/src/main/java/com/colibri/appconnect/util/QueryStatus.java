@@ -27,7 +27,7 @@ public class QueryStatus<T> {
     public Boolean isSuccessful(){
         return state == QueryStates.Success;
     }
-
+    public Boolean isNewDocument() { return state == QueryStates.NewDocument;}
     public Boolean isFailed(){
         return state == QueryStates.Error;
     }
@@ -39,6 +39,7 @@ public class QueryStatus<T> {
         return error;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "QueryStatus{" +
@@ -69,6 +70,23 @@ public class QueryStatus<T> {
         }
     }
 
+    public static class NewDocument<T> extends QueryStatus<T>{
+
+        public NewDocument(T data) {
+            super(QueryStates.NewDocument);
+            this.data = data;
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "NewDocument{" +
+                    "state=" + state +
+                    ", data=" + data +
+                    '}';
+        }
+    }
+
     public static class Error<T> extends QueryStatus<T> {
         public Error(String message){
             super(QueryStates.Error);
@@ -86,6 +104,14 @@ public class QueryStatus<T> {
             this.data = data;
         }
 
+        public static <T,Q> Error<T> convert(QueryStatus<Q> e){
+            if(e.error != null){
+                return new Error<>(e.error);
+            }
+            return new Error<>(e.message);
+        }
+
+        @NonNull
         @Override
         public String toString() {
             return "QueryStatus{" +
@@ -101,6 +127,7 @@ public class QueryStatus<T> {
         public Loading(){
             super(QueryStates.Loading);
         }
+        @NonNull
         @Override
         public String toString() {
             return "QueryStatus{" +

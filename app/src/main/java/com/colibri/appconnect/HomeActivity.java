@@ -2,6 +2,7 @@ package com.colibri.appconnect;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -18,6 +20,7 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.colibri.appconnect.contactList.ContactFragment;
 import com.colibri.appconnect.data.Authenticator;
@@ -30,6 +33,7 @@ import com.colibri.appconnect.userprofile.ProfileActivity;
 import com.colibri.appconnect.util.QueryStates;
 import com.colibri.appconnect.util.QueryStatus;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.Timestamp;
 
 import java.util.List;
 
@@ -38,10 +42,20 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnBu
     ActivityHomeBinding binding;
     repository repo;
     Authenticator authenticator;
+    Fragment frag = null;
 
     private void TestChatRoom(){
-
-        repo.getChatroomList().observe(this, this::onListChatQueryChanged);
+        String cr = "safsef";
+        repo.getChatroom(cr).observe(this,rep->{
+            Log.d(TAG, "TestChatRoom: " + rep);
+            final ChatRoom data = rep.getData();
+            if (data != null) {
+                data.setName(Timestamp.now().toString());
+                data.pushToFirebase().observe(this, val->{
+                    Log.d(TAG, "TestChatRoom: " + val);
+                });
+            }
+        });
     }
 
     private void onListChatQueryChanged(QueryStatus<List<ChatRoom>> listQueryStatus) {
@@ -135,7 +149,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnBu
     public void setBottomNavigation() {
         BottomNavigationView navView = findViewById(R.id.bottom_navigation);
         navView.setOnItemSelectedListener(item -> {
-            Fragment frag =null;
+
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     frag = new HomeFragment();
@@ -173,4 +187,22 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnBu
     }
 
     private static final String TAG = "AP::HomeActivity";
+
+    @Override
+    public void onBackPressed() {
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.flFragment);
+
+        if (f instanceof MenuFragment || f instanceof ContactFragment || f instanceof ConversationsFragment ) {
+            frag = new HomeFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, frag).commit();
+        } else {
+            new AlertDialog.Builder(this)
+                    .setIcon(R.drawable.ic_alert)
+                    .setTitle("Fermer l'application ?")
+                    .setMessage("Êtes-vous sur de vouloir quitter l'application?")
+                    .setPositiveButton("Oui", (dialog, which) -> finish())
+                    .setNegativeButton("Non", null)
+                    .show();
+        }
+    }
 }

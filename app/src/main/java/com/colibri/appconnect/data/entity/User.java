@@ -30,9 +30,6 @@ public class User {
         return document.getDocId();
     }
 
-    public DocumentReference getDocumentReference(){
-        return document.getDocumentReference();
-    }
 
     public String getDisplayName(){
         return document.getDisplayName();

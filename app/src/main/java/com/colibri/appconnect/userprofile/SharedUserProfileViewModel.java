@@ -25,13 +25,13 @@ public class SharedUserProfileViewModel extends ViewModel {
 
     private final ActionButtonAdapter adapter = new ActionButtonAdapter();
 
-    private final String placeholderRepo;
+
     private View.OnClickListener signOutClickListener = null;
 
     private ProfileAction phoneClickListener = null;
     private ProfileAction emailClickListener = null;
 
-    private ProfileAction chatClickAction = null;
+    private ProfileAction chatClickListener = null;
     private final repository repo = repository.getInstance();
     private final LiveData<QueryStatus<User>> userQuery;
     private final LiveData<Boolean> isLoading;
@@ -44,7 +44,7 @@ public class SharedUserProfileViewModel extends ViewModel {
         return adapter;
     }
 
-    public SharedUserProfileViewModel(String placeholderRepo, String userId)
+    public SharedUserProfileViewModel(String userId)
     {
         super();
 
@@ -53,19 +53,32 @@ public class SharedUserProfileViewModel extends ViewModel {
         } else {
             userQuery = repo.getUser(userId);
         }
+        isLoading = Transformations.map(userQuery, QueryStatus::isLoading);
+        userProfile = Transformations.map(userQuery, this::getUserProfileOnUserChange);
+    }
 
-        this.placeholderRepo = placeholderRepo;
-        isLoading = Transformations.map(userQuery, resUserProfile-> (resUserProfile.isLoading()));
+    public LiveData<QueryStatus<User>> getUserQuery() {
+        return userQuery;
+    }
 
-        userProfile = Transformations.map(userQuery, resUserProfile->{
-                    if (resUserProfile.isSuccessful()){
-                        Log.d(TAG, "getUserProfile: " + resUserProfile);
-                        adapter.submitList(getActionButtons(resUserProfile.getData()));
-                        return new UserProfile(resUserProfile.getData());
-                    }
-                    return null;
-                }
-        );
+    public void onUserChange(User user) {
+        adapter.submitList(getActionButtons(user));
+    }
+
+    private UserProfile getUserProfileOnUserChange(QueryStatus<User> qsUser){
+        switch (qsUser.getState()){
+            case Success:
+                Log.d(TAG, "getUserProfileOnUserChange: Success: " + qsUser.getData());
+                onUserChange(qsUser.getData());
+                return new UserProfile(qsUser.getData());
+
+            case Error:
+                Log.d(TAG, "getUserProfileOnUserChange: Error: " + qsUser);
+                break;
+            case Loading:
+                break;
+        }
+        return null;
     }
 
 
@@ -92,8 +105,8 @@ public class SharedUserProfileViewModel extends ViewModel {
         this.signOutClickListener = signOutClickListener;
     }
 
-    public void setChatAction(ProfileAction profileAction) {
-        chatClickAction = profileAction;
+    public void setChatClickListener(ProfileAction profileAction) {
+        this.chatClickListener = profileAction;
     }
 
     private List<ActionButtonBinding> getActionButtons(User user){
@@ -133,13 +146,13 @@ public class SharedUserProfileViewModel extends ViewModel {
     }
 
     private ActionButtonBinding getChatActionButton(User user){
-        if(user.getIsCurrentUser() && chatClickAction != null){
+        if(user.getIsCurrentUser() && chatClickListener != null){
             return null;
         }
         ActionButtonBinding chatButton = new ActionButtonBinding(R.drawable.ic_message, "Envoyer un message");
 
         chatButton.setOnClickListener(view -> {
-            chatClickAction.execute(user.getId());
+            chatClickListener.execute(user.getId());
         });
         chatButton.setIsHighlighted(true);
         return chatButton;
@@ -181,27 +194,23 @@ public class SharedUserProfileViewModel extends ViewModel {
         ActionButtonBinding abb = new ActionButtonBinding(icon, label);
         if (action != null && !user.getIsCurrentUser()) {
             abb.setIsHighlighted(true);
-            abb.setOnClickListener(view -> {
-                action.execute(actionParameter);
-            });
+            abb.setOnClickListener(view -> action.execute(actionParameter));
         }
         return abb;
     }
 
     
     public static class Factory implements ViewModelProvider.Factory{
-        private final String mPlaceholderRepo;
         private final String mUserId;
 
-        public Factory(String placeholderRepo, String userId){
-            mPlaceholderRepo = placeholderRepo;
+        public Factory(String userId){
             mUserId = userId;
         }
         @SuppressWarnings("unchecked")
         @Override
         @NonNull
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            return (T) new SharedUserProfileViewModel(mPlaceholderRepo, mUserId);
+            return (T) new SharedUserProfileViewModel(mUserId);
         }
     }
 

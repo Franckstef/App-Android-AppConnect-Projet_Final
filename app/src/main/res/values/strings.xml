@@ -25,4 +25,6 @@
     <string name="AuthError_UserCancel">Authentification annuller par l\'utilisateur</string>
     <string name="AuthError_NoNetwork">Erreur d\'authentification: Aucune connection internet disponible</string>
     <string name="AuthError_Unknow">Erreur inconnu d\'authentification</string>
+    <string name="chargement">Chargement</string>
+    <string name="Bonjour">Bonjour</string>
 </resources>
